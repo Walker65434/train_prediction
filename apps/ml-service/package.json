@@ -1,0 +1,10 @@
+{
+  "name": "ml-service",
+  "main": "app/main.py",
+  "scripts": {
+    "dev": "venv\\Scripts\\python.exe -m uvicorn app.main:app --reload",
+    "start": "uvicorn app.main:app",
+    "format": "venv\\Scripts\\python.exe -m black .",
+    "format:check": "venv\\Scripts\\python.exe -m black . --check"
+  }
+}

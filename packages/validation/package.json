@@ -1,0 +1,11 @@
+{
+  "name": "@repo/validation",
+  "version": "1.0.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.js"
+  },
+  "dependencies": {
+    "zod": "^4.6.5"
+  }
+}
