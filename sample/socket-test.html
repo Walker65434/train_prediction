@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Socket.IO Test</title>
+</head>
+
+<body>
+  <h2>Socket.IO Train Test</h2>
+
+  <button onclick="watchTrain()">Watch Train</button>
+  <button onclick="sendHeartbeat()">Heartbeat</button>
+  <button onclick="stopWatch()">Stop Watch</button>
+
+  <pre id="output"></pre>
+
+  <script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
+
+  <script>
+    const output = document.getElementById("output");
+
+    const socket = io("http://localhost:3000");
+
+    const watchId = "watch_001";
+    const trainNumber = "12951";
+
+    function log(message) {
+      output.textContent += message + "\n";
+    }
+
+    socket.on("connect", () => {
+      log("✅ Connected");
+      log("Socket ID: " + socket.id);
+    });
+
+    socket.on("disconnect", (reason) => {
+      log("❌ Disconnected: " + reason);
+    });
+
+    socket.on("watch-started", (data) => {
+      log("👀 Watch started:");
+      log(JSON.stringify(data, null, 2));
+    });
+
+    socket.on("heartbeat-ack", (data) => {
+      log("💓 Heartbeat ACK:");
+      log(JSON.stringify(data, null, 2));
+    });
+
+    socket.on("eta-update", (data) => {
+      log("🚆 ETA UPDATE:");
+      log(JSON.stringify(data, null, 2));
+    });
+
+    socket.on("watch-stopped", (data) => {
+      log("⏹️ Watch stopped:");
+      log(JSON.stringify(data, null, 2));
+    });
+
+    socket.on("error", (error) => {
+      log("🚨 Socket error:");
+      log(JSON.stringify(error, null, 2));
+    });
+
+    function watchTrain() {
+      socket.emit("watch-train", {
+        watchId,
+        trainNumber
+      });
+
+      log("📤 watch-train sent");
+    }
+
+    function sendHeartbeat() {
+      socket.emit("heartbeat", {
+        watchId
+      });
+
+      log("📤 heartbeat sent");
+    }
+
+    function stopWatch() {
+      socket.emit("stop-watch", {
+        watchId
+      });
+
+      log("📤 stop-watch sent");
+    }
+  </script>
+</body>
+
+</html>

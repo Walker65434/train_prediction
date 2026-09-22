@@ -15,7 +15,8 @@
     "build": "turbo run build",
     "dev": "turbo run dev",
     "dev:full": "turbo run dev",
-    "lint": "turbo run lint",
+    "infra": "docker compose up",
+    "infra:down": "docker compose down",
     "format": "pnpm run format:js && pnpm run format:py",
     "format:js": "prettier --write \"**/*.{js,jsx,json,md,yml,yaml,css}\"",
     "format:py": "turbo run format",
@@ -27,7 +28,7 @@
     "prettier": "3.9.8",
     "turbo": "^2.11.2"
   },
-  "packageManager": "pnpm@11.25.0",
+  "packageManager": "pnpm@12.5.1",
   "engines": {
     "node": ">=24"
   }

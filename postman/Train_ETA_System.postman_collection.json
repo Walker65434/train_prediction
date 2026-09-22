@@ -1,0 +1,63 @@
+{
+  "info": {
+    "_postman_id": "c1f21151-c006-47b2-843c-6bfdfb6de3d4",
+    "name": "Train ETA System - API Gateway",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/health",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["health"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Start Watch Session",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"trainId\": \"12951\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/watch",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["watch"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Train Result",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/result/12951",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["result", "12951"]
+        }
+      },
+      "response": []
+    }
+  ]
+}

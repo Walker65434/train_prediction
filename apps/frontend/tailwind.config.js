@@ -1,4 +1,3 @@
-import daisyui from 'daisyui';
 import scrollbarHide from 'tailwind-scrollbar-hide';
 
 /** @type {import('tailwindcss').Config} */
@@ -7,7 +6,7 @@ export default {
   theme: {
     extend: {},
   },
-  plugins: [daisyui, scrollbarHide],
+  plugins: [scrollbarHide],
   daisyui: {
     themes: true,
   },
