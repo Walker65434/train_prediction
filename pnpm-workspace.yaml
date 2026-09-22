@@ -2,4 +2,7 @@ packages:
   - 'apps/*'
   - 'packages/*'
 
+allowBuilds:
+  tesseract.js: true
+
 minimumReleaseAge: 0
