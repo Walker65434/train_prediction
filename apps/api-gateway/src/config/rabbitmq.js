@@ -11,12 +11,18 @@ export const connectRabbitMQ = async () => {
     channel = await connection.createChannel();
 
     // NOTE: Queue Assert
-    await channel.assertQueue(process.env.RABBITMQ_START_QUEUE, { durable: true });
-    await channel.assertQueue(process.env.RABBITMQ_STOP_QUEUE, { durable: true });
-    await channel.assertQueue(process.env.RABBITMQ_RESULT_QUEUE, { durable: true });
+    await channel.assertQueue(process.env.RABBITMQ_START_QUEUE, {
+      durable: true,
+    });
+    await channel.assertQueue(process.env.RABBITMQ_STOP_QUEUE, {
+      durable: true,
+    });
+    await channel.assertQueue(process.env.RABBITMQ_RESULT_QUEUE, {
+      durable: true,
+    });
 
     console.log('📨 RabbitMQ Connected!!');
-    
+
     // NOTE: Consume Messages
     await consumeResult();
   } catch (err) {
