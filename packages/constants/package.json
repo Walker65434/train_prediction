@@ -1,0 +1,10 @@
+{
+  "name": "@repo/constants",
+  "version": "1.0.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.js",
+    "./watch": "./src/watch.js",
+    "./result": "./src/result.js"
+  }
+}

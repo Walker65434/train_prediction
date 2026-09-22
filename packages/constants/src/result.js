@@ -1,0 +1,17 @@
+const TRAIN_STATUS = [
+  'SCHEDULED',
+  'RUNNING',
+  'DELAYED',
+  'ARRIVED',
+  'CANCELLED',
+];
+
+const STATION_STATUS = [
+  'UPCOMING',
+  'CURRENT',
+  'ARRIVED',
+  'DEPARTED',
+  'SKIPPED',
+];
+
+export { TRAIN_STATUS, STATION_STATUS };

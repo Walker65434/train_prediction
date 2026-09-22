@@ -10,7 +10,6 @@
       "cache": false,
       "persistent": true
     },
-    "lint": {},
     "format": {},
     "format:check": {}
   }
