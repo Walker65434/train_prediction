@@ -87,9 +87,8 @@ export const initializeSocket = (server) => {
           status: STATUS.ACTIVE,
         });
 
-        if (activeWatchesCount === 0) {
-          await publishStop(trainId);
-        }
+        // Always publish stop to ensure ML service kills the loop (ML is idempotent)
+        await publishStop(trainId);
       } catch (err) {
         console.error('Error cleaning up watch:', err);
       }
@@ -178,9 +177,8 @@ const startHeartbeatMonitor = () => {
             status: STATUS.ACTIVE,
           });
 
-          if (activeCount === 0) {
-            await publishStop(watch.trainId);
-          }
+          // Always publish stop to ensure ML service kills the loop
+          await publishStop(watch.trainId);
         }
       }
     } catch (err) {

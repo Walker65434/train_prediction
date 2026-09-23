@@ -58,6 +58,7 @@ export const HomePage = () => {
   const handleTicketNumberExtracted = (extractedNum) => {
     if (extractedNum) {
       setTrainInput(extractedNum);
+      handleSearch(extractedNum);
     }
   };
 

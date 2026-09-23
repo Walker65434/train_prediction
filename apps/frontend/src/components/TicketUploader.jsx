@@ -64,16 +64,10 @@ export const TicketUploader = ({ onSelectTrainNumber }) => {
         setExtractedNumber(result.trainNumber);
         setCandidates(result.allCandidates || []);
         toast.success(`Found Train #${result.trainNumber}!`, { icon: '🎫' });
-        if (onSelectTrainNumber) {
-          onSelectTrainNumber(result.trainNumber);
-        }
       } else if (result.allCandidates && result.allCandidates.length > 0) {
         setExtractedNumber(result.allCandidates[0]);
         setCandidates(result.allCandidates);
         toast('Possible train number detected. Please verify.', { icon: '🔍' });
-        if (onSelectTrainNumber) {
-          onSelectTrainNumber(result.allCandidates[0]);
-        }
       } else {
         setErrorMsg(
           'Could not detect a 5-digit train number. You can enter it manually.'

@@ -1,5 +1,7 @@
 {
   "name": "ml-service",
+  "author": "Hetvi Visaria",
+  "description": "",
   "main": "app/main.py",
   "scripts": {
     "dev": "venv\\Scripts\\python.exe -m uvicorn app.main:app --reload",
