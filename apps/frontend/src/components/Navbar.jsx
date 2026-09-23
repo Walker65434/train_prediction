@@ -1,8 +1,22 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrain, faBolt, faCircle } from '@fortawesome/free-solid-svg-icons';
+import {
+  faArrowRight,
+  faMagnifyingGlass,
+  faTrain,
+  faUser,
+  faSignal,
+} from '@fortawesome/free-solid-svg-icons';
 import { useTrainStore } from '../store/useTrainStore';
+
+const navItems = [
+  { label: 'Explore', href: '/' },
+  { label: 'Train Search', href: '/' },
+  { label: 'Predictions', href: '/#prediction' },
+  { label: 'Live Journey', href: '/#live' },
+  { label: 'Ticket Scanner', href: '/#scanner' },
+];
 
 export const Navbar = () => {
   const location = useLocation();
@@ -11,78 +25,65 @@ export const Navbar = () => {
   const isTrackPage = location.pathname.startsWith('/track');
 
   return (
-    <header className="sticky top-0 z-50 backdrop-blur-xl bg-slate-950/80 border-b border-slate-800/80 text-slate-100 shadow-lg shadow-black/40">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-        {/* Brand / Logo */}
-        <Link to="/" className="flex items-center gap-3 group">
-          <div className="relative">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 via-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/25 group-hover:scale-105 transition-all duration-300">
-              <FontAwesomeIcon
-                icon={faTrain}
-                className="text-white text-lg group-hover:rotate-6 transition-transform duration-300"
-              />
-            </div>
-            <div className="absolute -bottom-1 -right-1 w-3.5 h-3.5 rounded-full bg-emerald-500 border-2 border-slate-950 flex items-center justify-center">
-              <span className="w-1.5 h-1.5 rounded-full bg-white animate-ping" />
-            </div>
+    <header className="sticky top-4 z-50 px-4 pt-4">
+      <div className="mx-auto flex max-w-6xl items-center justify-between rounded-full border border-[rgba(28,27,26,0.08)] bg-[rgba(255,255,255,0.72)] px-4 py-3 shadow-[0_18px_40px_rgba(19,14,8,0.08)] backdrop-blur-xl">
+        <Link to="/" className="group flex items-center gap-3">
+          <div className="relative flex h-11 w-11 items-center justify-center rounded-full bg-[#f05d3c] text-white shadow-[0_16px_28px_rgba(240,93,60,0.35)] transition-transform duration-300 group-hover:-translate-y-0.5">
+            <FontAwesomeIcon icon={faTrain} className="text-lg" />
+            <span className="absolute -bottom-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-[#2d9a6f] ring-2 ring-[#fffaf5]">
+              <span className="h-1.5 w-1.5 rounded-full bg-white animate-pulse" />
+            </span>
           </div>
 
           <div>
-            <div className="flex items-center gap-2">
-              <span className="font-heading font-black text-xl tracking-tight text-white group-hover:text-cyan-400 transition-colors">
-                Rail
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-indigo-400 to-purple-400">
-                  Predict
-                </span>
-              </span>
-              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-[10px] font-mono font-semibold text-indigo-400">
-                <FontAwesomeIcon icon={faBolt} className="text-[8px]" />
-                AI ETA
-              </span>
-            </div>
-            <p className="text-[11px] text-slate-400 hidden sm:block font-medium">
-              Real-time Train Tracking & ML Delay Predictions
-            </p>
+            <span className="font-heading text-xl font-black tracking-[-0.06em] text-[#1d1b1a]">
+              Rail<span className="text-[#f05d3c]">Pulse</span>
+            </span>
           </div>
         </Link>
 
-        {/* Live Status indicator & Navigation */}
-        <div className="flex items-center gap-3">
+        <nav className="hidden items-center gap-1 rounded-full bg-[#f7f2eb] px-2 py-1 md:flex">
+          {navItems.map((item) => (
+            <Link
+              key={item.label}
+              to={item.href}
+              className={`rounded-full px-3 py-2 text-sm font-medium transition-colors ${
+                location.pathname === '/' && item.label === 'Explore'
+                  ? 'bg-white text-[#1d1b1a] shadow-sm'
+                  : 'text-[#5e5a57] hover:bg-white hover:text-[#1d1b1a]'
+              }`}
+            >
+              {item.label}
+            </Link>
+          ))}
+        </nav>
+
+        <div className="flex items-center gap-2">
           {isTrackPage && currentTrainId && (
-            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-900/90 border border-slate-800 text-xs shadow-inner">
+            <div className="hidden items-center gap-2 rounded-full border border-[#e7ded3] bg-[#fffaf5] px-3 py-2 text-xs font-medium text-[#1d1b1a] sm:flex">
               <span className="relative flex h-2.5 w-2.5">
                 <span
-                  className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${
-                    isLiveConnected ? 'bg-emerald-400' : 'bg-amber-400'
-                  }`}
+                  className={`absolute inline-flex h-full w-full rounded-full opacity-75 ${
+                    isLiveConnected ? 'bg-[#2d9a6f]' : 'bg-[#d08b2a]'
+                  } animate-ping`}
                 />
                 <span
-                  className={`relative inline-flex rounded-full h-2.5 w-2.5 ${
-                    isLiveConnected ? 'bg-emerald-500' : 'bg-amber-500'
+                  className={`relative inline-flex h-2.5 w-2.5 rounded-full ${
+                    isLiveConnected ? 'bg-[#2d9a6f]' : 'bg-[#d08b2a]'
                   }`}
                 />
               </span>
-              <span className="text-slate-300 font-mono text-[11px] font-medium">
-                {isLiveConnected ? (
-                  <span className="text-emerald-400 flex items-center gap-1">
-                    Socket Live
-                    <span className="text-[10px] text-slate-500">
-                      #{currentTrainId}
-                    </span>
-                  </span>
-                ) : (
-                  <span className="text-amber-400">Connecting...</span>
-                )}
-              </span>
+              <span>{isLiveConnected ? 'Live' : 'Connecting'} • #{currentTrainId}</span>
             </div>
           )}
 
-          <Link
-            to="/"
-            className="px-3.5 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 hover:border-slate-700 text-xs font-semibold text-slate-300 hover:text-white transition-all shadow-sm"
-          >
-            Home
-          </Link>
+          <button className="flex h-10 w-10 items-center justify-center rounded-full border border-[#e7ded3] bg-white text-[#1d1b1a] transition-all hover:-translate-y-0.5 hover:shadow-md">
+            <FontAwesomeIcon icon={faMagnifyingGlass} className="text-sm" />
+          </button>
+
+          <button className="flex h-10 w-10 items-center justify-center rounded-full border border-[#e7ded3] bg-[#1d1b1a] text-white shadow-[0_12px_20px_rgba(29,27,26,0.12)] transition-all hover:-translate-y-0.5">
+            <FontAwesomeIcon icon={faUser} className="text-sm" />
+          </button>
         </div>
       </div>
     </header>

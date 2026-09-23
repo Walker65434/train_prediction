@@ -8,40 +8,36 @@ import TrackPage from './pages/TrackPage';
 
 function App() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 text-slate-100 font-sans antialiased selection:bg-primary selection:text-white">
-      {/* Toast Notifications */}
+    <div className="rail-shell">
       <Toaster
         position="top-right"
         toastOptions={{
           style: {
-            background: '#1a1f2c',
-            color: '#f8fafc',
-            border: '1px solid rgba(255, 255, 255, 0.1)',
-            borderRadius: '1rem',
+            background: '#fffaf5',
+            color: '#1c1b1a',
+            border: '1px solid rgba(28, 27, 26, 0.08)',
+            borderRadius: '16px',
             fontSize: '0.875rem',
             padding: '12px 16px',
-            boxShadow:
-              '0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.5)',
+            boxShadow: '0 18px 50px rgba(29, 30, 30, 0.10)',
           },
           success: {
             iconTheme: {
-              primary: '#10b981',
+              primary: '#2d9a6f',
               secondary: '#ffffff',
             },
           },
           error: {
             iconTheme: {
-              primary: '#ef4444',
+              primary: '#f05d3c',
               secondary: '#ffffff',
             },
           },
         }}
       />
 
-      {/* Main Top Navigation */}
       <Navbar />
 
-      {/* Application Routes */}
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/track/:trainId" element={<TrackPage />} />
