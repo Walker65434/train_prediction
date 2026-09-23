@@ -2,13 +2,11 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-  faTrain,
   faArrowLeft,
   faArrowRight,
   faClockRotateLeft,
   faShareNodes,
-  faCheck,
-  faSignal,
+  faTrain,
 } from '@fortawesome/free-solid-svg-icons';
 import toast from 'react-hot-toast';
 import { TRAIN_STATUS } from '@repo/constants/result';
@@ -39,121 +37,89 @@ export const TrainHeaderCard = ({ trainData, lastUpdated }) => {
       })
     : 'Just now';
 
-  // Compute status theme
-  const isRunning = status.toUpperCase() === 'RUNNING';
-  const isDelayed = status.toUpperCase() === 'DELAYED';
+  const normalizedStatus = String(status || '').toUpperCase();
+  const isRunning = normalizedStatus === TRAIN_STATUS.RUNNING;
+  const isDelayed = normalizedStatus === TRAIN_STATUS.DELAYED;
+
+  const badgeClassName =
+    normalizedStatus === TRAIN_STATUS.RUNNING
+      ? 'border-emerald-500/30 bg-emerald-500/20 text-emerald-400'
+      : normalizedStatus === TRAIN_STATUS.DELAYED
+        ? 'border-amber-500/30 bg-amber-500/20 text-amber-400'
+        : 'border-slate-500/30 bg-slate-500/20 text-slate-300';
 
   return (
-    <div className="rounded-3xl border border-slate-800 bg-gradient-to-br from-slate-900/90 via-slate-900/80 to-slate-950 p-6 sm:p-8 backdrop-blur-xl shadow-2xl relative overflow-hidden">
-      {/* Decorative ambient background glows */}
-      <div className="absolute top-0 right-0 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none -mr-20 -mt-20" />
-      <div className="absolute bottom-0 left-0 w-80 h-80 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none -ml-20 -mb-20" />
+    <div className="rail-panel relative overflow-hidden p-5 sm:p-7">
+      <div className="absolute -right-16 -top-16 h-52 w-52 rounded-full bg-orange-500/20 blur-3xl" />
+      <div className="absolute -bottom-16 -left-10 h-52 w-52 rounded-full bg-blue-500/20 blur-3xl" />
 
       <div className="relative z-10">
-        {/* Navigation & Share Row */}
-        <div className="flex items-center justify-between gap-4 mb-6">
-          <Link
-            to="/"
-            className="inline-flex items-center gap-2 text-xs font-semibold text-slate-300 hover:text-white px-3.5 py-2 rounded-xl bg-slate-800/80 hover:bg-slate-800 border border-slate-700/80 transition-all shadow-sm"
-          >
+        <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <Link to="/" className="rail-btn secondary w-fit">
             <FontAwesomeIcon icon={faArrowLeft} />
-            <span>Search Another Train</span>
+            Search another train
           </Link>
 
-          <button
-            onClick={handleShare}
-            type="button"
-            className="px-3.5 py-2 rounded-xl bg-slate-800/80 hover:bg-slate-800 border border-slate-700/80 text-xs font-semibold text-slate-300 hover:text-white transition-all shadow-sm flex items-center gap-2"
-            title="Share Tracking Link"
-          >
-            <FontAwesomeIcon icon={faShareNodes} className="text-cyan-400" />
-            <span>Share Link</span>
+          <button type="button" onClick={handleShare} className="rail-btn secondary w-fit">
+            <FontAwesomeIcon icon={faShareNodes} />
+            Share link
           </button>
         </div>
 
-        {/* Main Train Details */}
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-          <div className="space-y-3">
-            <div className="flex items-center gap-2.5 flex-wrap">
-              <span className="font-mono font-bold text-xs bg-gradient-to-r from-cyan-500 to-indigo-600 text-white px-3 py-1 rounded-xl shadow-sm tracking-wider">
+        <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+          <div className="space-y-4">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="rounded-full bg-slate-900 border border-slate-900 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-white">
                 #{trainId}
               </span>
-              <span className="font-mono text-xs px-2.5 py-1 rounded-xl bg-slate-800 border border-slate-700 text-slate-300 font-medium">
-                LIVE ETA STREAM
+              <span className="rounded-full border border-slate-300 bg-white/60 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-700">
+                Live ETA stream
               </span>
               <span
-                className={`badge text-xs font-semibold px-2.5 py-1 ${
-                  status === TRAIN_STATUS.RUNNING
-                    ? 'badge-success text-success-content'
-                    : status === TRAIN_STATUS.DELAYED
-                      ? 'badge-warning text-warning-content'
-                      : status === TRAIN_STATUS.SCHEDULED
-                        ? 'badge-info text-info-content'
-                        : status === TRAIN_STATUS.ARRIVED
-                          ? 'badge-primary text-primary-content'
-                          : status === TRAIN_STATUS.CANCELLED
-                            ? 'badge-error text-error-content'
-                            : 'badge-neutral'
-                }`}
+                className={`inline-flex items-center gap-2 rounded-full border px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.16em] ${badgeClassName}`}
               >
-                <span className="relative flex h-2 w-2 mr-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-current opacity-75" />
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-current" />
-                </span>
+                <span className="h-2 w-2 rounded-full bg-current" />
                 {status}
               </span>
             </div>
 
-            <h1 className="text-2xl sm:text-4xl font-black text-white tracking-tight font-heading">
-              {trainName}
-            </h1>
+            <div>
+              <h1 className="font-heading text-3xl font-black tracking-[-0.07em] text-slate-900 sm:text-4xl">
+                {trainName}
+              </h1>
+            </div>
 
-            {/* Source to Destination Route Visualizer */}
-            <div className="flex items-center gap-3 text-sm text-slate-300 flex-wrap pt-1">
-              <div className="flex items-center gap-2 font-semibold text-white bg-slate-950/70 border border-slate-800 px-3 py-1.5 rounded-xl shadow-inner">
-                <FontAwesomeIcon
-                  icon={faTrain}
-                  className="text-cyan-400 text-xs"
-                />
+            <div className="flex flex-wrap items-center gap-3 text-sm">
+              <div className="flex items-center gap-2 rounded-full border border-slate-300 bg-white/60 px-3 py-2 font-semibold text-slate-900">
+                <FontAwesomeIcon icon={faTrain} className="text-orange-600" />
                 <span>{source?.stationName || 'Source Station'}</span>
-                {source?.stationCode && (
-                  <span className="text-xs font-mono text-cyan-400 bg-cyan-500/10 px-1.5 py-0.5 rounded border border-cyan-500/20">
+                {source?.stationCode ? (
+                  <span className="rounded-full bg-orange-500/10 px-2 py-1 text-[10px] font-bold uppercase tracking-[0.14em] text-orange-600">
                     {source.stationCode}
                   </span>
-                )}
+                ) : null}
               </div>
 
-              <div className="flex items-center gap-1.5 text-cyan-400">
-                <span className="h-[2px] w-6 bg-gradient-to-r from-cyan-500 to-indigo-500 rounded" />
-                <FontAwesomeIcon
-                  icon={faArrowRight}
-                  className="text-xs animate-pulse"
-                />
-              </div>
+              <FontAwesomeIcon icon={faArrowRight} className="text-orange-600" />
 
-              <div className="flex items-center gap-2 font-semibold text-white bg-slate-950/70 border border-slate-800 px-3 py-1.5 rounded-xl shadow-inner">
+              <div className="flex items-center gap-2 rounded-full border border-slate-300 bg-white/60 px-3 py-2 font-semibold text-slate-900">
                 <span>{destination?.stationName || 'Destination Station'}</span>
-                {destination?.stationCode && (
-                  <span className="text-xs font-mono text-indigo-400 bg-indigo-500/10 px-1.5 py-0.5 rounded border border-indigo-500/20">
+                {destination?.stationCode ? (
+                  <span className="rounded-full bg-blue-500/10 px-2 py-1 text-[10px] font-bold uppercase tracking-[0.14em] text-blue-600">
                     {destination.stationCode}
                   </span>
-                )}
+                ) : null}
               </div>
             </div>
           </div>
 
-          {/* Sync Time Banner */}
-          <div className="flex items-center gap-3.5 lg:self-center p-3.5 rounded-2xl bg-slate-950/80 border border-slate-800 text-xs shadow-inner">
-            <div className="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 flex items-center justify-center flex-shrink-0">
-              <FontAwesomeIcon icon={faClockRotateLeft} className="text-base" />
+          <div className="flex items-center gap-3 rounded-[22px] border border-slate-300 bg-white/60 p-3 shadow-xl backdrop-blur-md">
+            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-orange-500/10 text-orange-600">
+              <FontAwesomeIcon icon={faClockRotateLeft} />
             </div>
             <div>
-              <div className="text-[10px] uppercase font-bold tracking-wider text-slate-400">
-                Last Socket Sync
-              </div>
-              <div className="font-mono font-semibold text-white text-sm">
-                {formattedTime}
-              </div>
+              <div className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500">Last socket sync</div>
+              <div className="mt-1 font-mono text-sm font-bold text-slate-900">{formattedTime}</div>
             </div>
           </div>
         </div>

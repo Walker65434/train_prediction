@@ -2,27 +2,16 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-  faTrain,
   faArrowLeft,
   faRotateRight,
   faTriangleExclamation,
-  faHourglassHalf,
-  faBolt,
-  faSignal,
-  faCircleCheck,
 } from '@fortawesome/free-solid-svg-icons';
 import toast from 'react-hot-toast';
 
 import { useTrainStore } from '../store/useTrainStore';
 import { startWatchSession, fetchTrainResult } from '../lib/api';
-import {
-  getSocket,
-  joinTrainWatch,
-  leaveTrainWatch,
-  startHeartbeat,
-  stopHeartbeat,
-} from '../lib/socket';
-import { STATUS, STOP_REASON } from '@repo/constants/watch';
+import { getSocket, joinTrainWatch, leaveTrainWatch } from '../lib/socket';
+import { STATUS } from '@repo/constants/watch';
 
 import TrainSkeleton from '../components/TrainSkeleton';
 import TrainHeaderCard from '../components/TrainHeaderCard';
@@ -34,7 +23,6 @@ export const TrackPage = () => {
 
   const {
     trainData,
-    watchId,
     isLoading,
     isLiveConnected,
     lastUpdated,
@@ -66,10 +54,6 @@ export const TrackPage = () => {
 
     const initTracking = async () => {
       try {
-        // 1. Start Watch Session via HTTP POST /watch
-        console.log(
-          `[TrackPage] Starting watch session for train: ${cleanTrainId}`
-        );
         const watchRes = await startWatchSession(cleanTrainId);
 
         if (!isMounted) return;
@@ -78,7 +62,6 @@ export const TrackPage = () => {
         activeWatchIdRef.current = currentWatchId;
         setWatchSession(currentWatchId, cleanTrainId);
 
-        // 2. Fetch Initial Saved Result from MongoDB via GET /result/:trainId
         try {
           const resultRes = await fetchTrainResult(cleanTrainId);
           if (isMounted && resultRes?.result) {
@@ -88,12 +71,7 @@ export const TrackPage = () => {
             }
           }
         } catch (fetchErr) {
-          // 404 is normal if train is being watched for the first time & ML hasn't emitted yet
-          console.log(
-            '[TrackPage] No existing result in DB yet. Waiting for ML live stream...'
-          );
           if (isMounted) {
-            // Provide a graceful starting shell
             setTrainData({
               trainId: cleanTrainId,
               trainName: `Train #${cleanTrainId}`,
@@ -109,7 +87,6 @@ export const TrackPage = () => {
           }
         }
 
-        // 3. Connect to Socket.IO & join train room
         const socket = getSocket();
 
         const onConnect = () => {
@@ -124,7 +101,6 @@ export const TrackPage = () => {
         };
 
         const onEtaUpdate = (payload) => {
-          console.log('[TrackPage] Received live eta-update:', payload);
           if (!isMounted) return;
           updateEtaData(payload);
           toast.success('Live ETA update received!', {
@@ -140,16 +116,8 @@ export const TrackPage = () => {
           }
         };
 
-        const onWatchStarted = (data) => {
-          console.log(
-            '[TrackPage] Watch started acknowledged by server:',
-            data
-          );
-        };
-
-        const onError = (err) => {
-          console.warn('[TrackPage] Socket warning:', err);
-        };
+        const onWatchStarted = () => {};
+        const onError = (err) => console.warn('[TrackPage] Socket warning:', err);
 
         socket.on('connect', onConnect);
         socket.on('disconnect', onDisconnect);
@@ -158,7 +126,6 @@ export const TrackPage = () => {
         socket.on('watch-started', onWatchStarted);
         socket.on('error', onError);
 
-        // Join room & start heartbeat
         joinTrainWatch(currentWatchId, cleanTrainId);
         if (socket.connected) {
           setLiveConnected(true);
@@ -173,7 +140,6 @@ export const TrackPage = () => {
           socket.off('error', onError);
         };
       } catch (err) {
-        console.error('[TrackPage] Initialization error:', err);
         if (isMounted) {
           setError(
             err.response?.data?.message ||
@@ -193,14 +159,10 @@ export const TrackPage = () => {
       cleanupSocketListeners = cleanupFn;
     });
 
-    // Cleanup on unmount or when trainId changes
     return () => {
       isMounted = false;
       const currentWatchId = activeWatchIdRef.current;
       if (currentWatchId) {
-        console.log(
-          `[TrackPage] Unmounting: leaving watch session ${currentWatchId}`
-        );
         leaveTrainWatch(currentWatchId);
       }
       if (cleanupSocketListeners) {
@@ -210,7 +172,6 @@ export const TrackPage = () => {
     };
   }, [trainId]);
 
-  // Manual refresh trigger
   const handleManualRefresh = async () => {
     if (!trainId) return;
     setIsRefreshing(true);
@@ -230,83 +191,54 @@ export const TrackPage = () => {
   };
 
   return (
-    <div className="min-h-[calc(100vh-4rem)] max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
-      {/* Loading Skeleton */}
+    <div className="mx-auto max-w-6xl px-4 pb-16 pt-8 sm:px-6 lg:px-8">
       {isLoading ? (
         <TrainSkeleton />
       ) : errorMessage ? (
-        // Error State
-        <div className="max-w-xl mx-auto my-16 p-8 rounded-3xl border border-rose-500/30 bg-slate-900/90 text-center space-y-4 backdrop-blur-xl shadow-2xl">
-          <div className="w-16 h-16 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-400 flex items-center justify-center mx-auto text-2xl shadow-inner">
+        <div className="mx-auto max-w-xl rail-panel p-8 text-center">
+          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-white/60 text-xl text-red-500 border border-white/80">
             <FontAwesomeIcon icon={faTriangleExclamation} />
           </div>
-          <h2 className="text-xl font-bold text-white font-heading">
-            Tracking Session Error
+          <h2 className="mt-4 font-heading text-2xl font-black tracking-[-0.06em] text-slate-900">
+            Tracking session error
           </h2>
-          <p className="text-xs text-slate-400 leading-relaxed max-w-md mx-auto">
-            {errorMessage}
-          </p>
-          <div className="flex items-center justify-center gap-3 pt-4">
-            <Link
-              to="/"
-              className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs font-semibold text-slate-300 transition-all flex items-center gap-2"
-            >
-              <FontAwesomeIcon icon={faArrowLeft} /> Return Home
+          <p className="mt-3 text-sm text-slate-600">{errorMessage}</p>
+          <div className="mt-6 flex items-center justify-center gap-3">
+            <Link to="/" className="rail-btn secondary">
+              <FontAwesomeIcon icon={faArrowLeft} />
+              Return home
             </Link>
-            <button
-              onClick={() => window.location.reload()}
-              className="px-4 py-2 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-white text-xs font-bold shadow-lg shadow-cyan-500/20 transition-all flex items-center gap-2"
-            >
-              <FontAwesomeIcon icon={faRotateRight} /> Retry Connection
+            <button onClick={() => window.location.reload()} className="rail-btn primary">
+              <FontAwesomeIcon icon={faRotateRight} />
+              Retry
             </button>
           </div>
         </div>
       ) : (
-        // Live Data View
         <div className="space-y-6">
-          {/* Header Card */}
           <TrainHeaderCard trainData={trainData} lastUpdated={lastUpdated} />
 
-          {/* Real-time Socket Stream Banner */}
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 p-4 rounded-2xl bg-slate-900/80 border border-slate-800/80 text-xs shadow-md backdrop-blur-xl">
+          <div className="rail-panel flex flex-col items-start justify-between gap-3 px-4 py-4 sm:flex-row sm:items-center">
             <div className="flex items-center gap-3">
               <span className="relative flex h-3 w-3">
-                <span
-                  className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${
-                    isLiveConnected ? 'bg-emerald-400' : 'bg-amber-400'
-                  }`}
-                />
-                <span
-                  className={`relative inline-flex rounded-full h-3 w-3 ${
-                    isLiveConnected ? 'bg-emerald-500' : 'bg-amber-500'
-                  }`}
-                />
+                <span className={`absolute inline-flex h-full w-full rounded-full opacity-75 ${isLiveConnected ? 'bg-emerald-500' : 'bg-amber-500'} animate-ping`} />
+                <span className={`relative inline-flex h-3 w-3 rounded-full ${isLiveConnected ? 'bg-emerald-500' : 'bg-amber-500'}`} />
               </span>
-              <span className="text-slate-300 font-medium">
+              <span className="text-sm text-slate-700">
                 {isLiveConnected
-                  ? 'Persistent WebSocket stream active. Receiving live ML delay updates.'
+                  ? 'Persistent WebSocket stream active and receiving live ML updates.'
                   : 'Re-establishing live WebSocket connection...'}
               </span>
             </div>
 
-            <button
-              type="button"
-              onClick={handleManualRefresh}
-              disabled={isRefreshing}
-              className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 hover:text-white text-xs font-semibold transition-all flex items-center gap-1.5 self-end sm:self-auto shadow-sm"
-            >
-              <FontAwesomeIcon
-                icon={faRotateRight}
-                className={`text-cyan-400 ${isRefreshing ? 'animate-spin' : ''}`}
-              />
-              <span>Refresh Snapshot</span>
+            <button type="button" onClick={handleManualRefresh} disabled={isRefreshing} className="rail-btn secondary">
+              <FontAwesomeIcon icon={faRotateRight} className={isRefreshing ? 'animate-spin' : ''} />
+              Refresh snapshot
             </button>
           </div>
 
-          {/* 4 Metric Cards */}
           <LiveMetricsGrid trainData={trainData} />
 
-          {/* Route Progression Timetable */}
           <RouteTimeline
             route={trainData?.route || []}
             source={trainData?.source}
