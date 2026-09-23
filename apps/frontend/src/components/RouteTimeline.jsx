@@ -7,6 +7,7 @@ import {
   faLocationDot,
   faFlagCheckered,
   faRoute,
+  faBuildingColumns,
 } from '@fortawesome/free-solid-svg-icons';
 
 export const RouteTimeline = ({
@@ -26,90 +27,132 @@ export const RouteTimeline = ({
     }
   };
 
-  // If no detailed route halts exist in backend result, show standard Source -> Current -> Destination summary
   const hasRoute = Array.isArray(route) && route.length > 0;
 
+  // Calculate overall route completion percentage dynamically
+  let routeProgressPct = 0;
+  if (hasRoute) {
+    const currentIdx = route.findIndex(
+      (s) =>
+        s.status === 'CURRENT' || s.stationCode === currStation?.stationCode
+    );
+    if (currentIdx >= 0) {
+      routeProgressPct = Math.round(((currentIdx + 1) / route.length) * 100);
+    } else {
+      const departedCount = route.filter((s) => s.status === 'DEPARTED').length;
+      routeProgressPct = Math.round((departedCount / route.length) * 100);
+    }
+  }
+
   return (
-    <div className="rounded-3xl border border-base-700/80 bg-base-900/70 p-6 sm:p-8 backdrop-blur-sm shadow-xl">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-base-800 pb-5 mb-6">
+    <div className="rounded-3xl border border-slate-800 bg-slate-900/80 p-6 sm:p-8 backdrop-blur-xl shadow-2xl space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800/80 pb-6">
         <div>
-          <h3 className="text-xl font-bold text-white flex items-center gap-2.5">
-            <FontAwesomeIcon icon={faRoute} className="text-primary text-lg" />
+          <h3 className="text-xl font-bold text-white flex items-center gap-3 font-heading">
+            <div className="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 flex items-center justify-center">
+              <FontAwesomeIcon icon={faRoute} className="text-lg" />
+            </div>
             <span>Station Timetable & Route Progression</span>
           </h3>
-          <p className="text-xs text-base-content/60 mt-0.5">
-            Live schedule comparison with expected arrival and departure times
+          <p className="text-xs text-slate-400 mt-1">
+            Real-time schedule comparison with predicted arrival & departure
+            timestamps
           </p>
         </div>
 
-        <div className="flex items-center gap-3 text-xs">
-          <div className="flex items-center gap-1.5 text-base-content/70">
+        {/* Legend */}
+        <div className="flex items-center gap-4 text-xs bg-slate-950/70 border border-slate-800 px-4 py-2 rounded-2xl">
+          <div className="flex items-center gap-2 text-slate-300 font-medium">
             <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
             <span>Departed</span>
           </div>
-          <div className="flex items-center gap-1.5 text-base-content/70">
-            <span className="w-2.5 h-2.5 rounded-full bg-primary animate-pulse" />
+          <div className="flex items-center gap-2 text-slate-300 font-medium">
+            <span className="relative flex h-2.5 w-2.5">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75" />
+              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-cyan-500" />
+            </span>
             <span>Current</span>
           </div>
-          <div className="flex items-center gap-1.5 text-base-content/70">
-            <span className="w-2.5 h-2.5 rounded-full bg-base-700" />
+          <div className="flex items-center gap-2 text-slate-300 font-medium">
+            <span className="w-2.5 h-2.5 rounded-full bg-slate-700" />
             <span>Upcoming</span>
           </div>
         </div>
       </div>
 
+      {hasRoute && (
+        <div className="space-y-2">
+          <div className="flex justify-between text-xs text-slate-400 font-medium">
+            <span>Overall Route Progression</span>
+            <span className="font-mono text-cyan-400 font-bold">
+              {routeProgressPct}% Completed
+            </span>
+          </div>
+          <div className="w-full bg-slate-950 rounded-full h-2 overflow-hidden border border-slate-800">
+            <div
+              className="bg-linear-to-r from-emerald-500 via-cyan-500 to-indigo-500 h-full rounded-full transition-all duration-500"
+              style={{ width: `${routeProgressPct}%` }}
+            />
+          </div>
+        </div>
+      )}
+
       {!hasRoute ? (
         // Summary 3-station layout if route array not detailed
         <div className="py-8 text-center space-y-6">
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 max-w-2xl mx-auto">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 max-w-3xl mx-auto">
             {/* Origin */}
-            <div className="p-4 rounded-2xl bg-base-800/80 border border-base-700 w-full sm:w-1/3 text-center">
-              <div className="badge badge-sm badge-outline mb-2">
+            <div className="p-5 rounded-2xl bg-slate-950/70 border border-slate-800 w-full sm:w-1/3 text-center space-y-1 shadow-inner">
+              <span className="px-2.5 py-0.5 rounded-md bg-slate-800 text-[10px] font-mono font-semibold text-slate-400 uppercase">
                 Origin Station
-              </div>
-              <div className="font-bold text-white text-base">
+              </span>
+              <div className="font-bold text-white text-base font-heading">
                 {source?.stationName || 'Source'}
               </div>
-              <div className="font-mono text-xs text-primary font-semibold">
+              <div className="font-mono text-xs text-cyan-400 font-bold">
                 {source?.stationCode || 'SRC'}
               </div>
             </div>
 
             {/* Current */}
-            <div className="p-4 rounded-2xl bg-primary/10 border border-primary/30 w-full sm:w-1/3 text-center relative">
-              <div className="badge badge-sm badge-primary mb-2">
-                Current Location
+            <div className="p-5 rounded-2xl bg-linear-to-br from-cyan-500/10 to-indigo-500/10 border border-cyan-500/30 w-full sm:w-1/3 text-center space-y-1 relative shadow-lg shadow-cyan-500/5">
+              <span className="px-2.5 py-0.5 rounded-md bg-cyan-500/20 text-[10px] font-mono font-bold text-cyan-300 uppercase">
+                Current Position
+              </span>
+              <div className="font-bold text-white text-base font-heading flex items-center justify-center gap-1.5">
+                <FontAwesomeIcon
+                  icon={faTrain}
+                  className="text-cyan-400 text-xs animate-pulse"
+                />
+                <span>{currStation?.stationName || 'In Transit'}</span>
               </div>
-              <div className="font-bold text-white text-base">
-                {currStation?.stationName || 'In Transit'}
-              </div>
-              <div className="font-mono text-xs text-primary font-semibold">
-                {currStation?.stationCode || 'NOW'}
+              <div className="font-mono text-xs text-cyan-300 font-bold">
+                {currStation?.stationCode || 'LIVE'}
               </div>
             </div>
 
             {/* Destination */}
-            <div className="p-4 rounded-2xl bg-base-800/80 border border-base-700 w-full sm:w-1/3 text-center">
-              <div className="badge badge-sm badge-outline mb-2">
+            <div className="p-5 rounded-2xl bg-slate-950/70 border border-slate-800 w-full sm:w-1/3 text-center space-y-1 shadow-inner">
+              <span className="px-2.5 py-0.5 rounded-md bg-slate-800 text-[10px] font-mono font-semibold text-slate-400 uppercase">
                 Final Destination
-              </div>
-              <div className="font-bold text-white text-base">
+              </span>
+              <div className="font-bold text-white text-base font-heading">
                 {destination?.stationName || 'Destination'}
               </div>
-              <div className="font-mono text-xs text-primary font-semibold">
+              <div className="font-mono text-xs text-indigo-400 font-bold">
                 {destination?.stationCode || 'DST'}
               </div>
             </div>
           </div>
-          <p className="text-xs text-base-content/50">
-            Detailed intermediate halt timetable will update automatically as
+          <p className="text-xs text-slate-500">
+            Intermediate halt timetable stream will update automatically as
             train advances.
           </p>
         </div>
       ) : (
         // Detailed station list
         <div className="relative overflow-x-auto">
-          <div className="min-w-[600px] space-y-3">
+          <div className="min-w-162.5 space-y-2.5 pt-2">
             {route.map((station, idx) => {
               const isFirst = idx === 0;
               const isLast = idx === route.length - 1;
@@ -121,25 +164,25 @@ export const RouteTimeline = ({
               return (
                 <div
                   key={station.stationCode || idx}
-                  className={`flex items-center justify-between p-3.5 sm:p-4 rounded-2xl border transition-all duration-200 ${
+                  className={`flex items-center justify-between p-4 rounded-2xl border transition-all duration-200 ${
                     isCurrent
-                      ? 'bg-primary/10 border-primary/40 shadow-lg shadow-primary/5'
+                      ? 'bg-linear-to-r from-cyan-500/10 via-indigo-500/10 to-slate-900 border-cyan-500/50 shadow-lg shadow-cyan-500/10'
                       : isDeparted
-                        ? 'bg-base-900/30 border-base-800/60 opacity-75'
-                        : 'bg-base-900/50 border-base-800 hover:border-base-700'
+                        ? 'bg-slate-950/40 border-slate-800/60 opacity-80'
+                        : 'bg-slate-950/70 border-slate-800 hover:border-slate-700'
                   }`}
                 >
                   {/* Station Identity */}
-                  <div className="flex items-center gap-3.5 w-1/3 min-w-0">
+                  <div className="flex items-center gap-3.5 w-2/5 min-w-0">
                     <div
-                      className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 text-sm ${
+                      className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 text-sm font-bold shadow-sm ${
                         isCurrent
-                          ? 'bg-primary text-white shadow-md shadow-primary/30 animate-pulse'
+                          ? 'bg-linear-to-tr from-cyan-500 to-indigo-600 text-white shadow-cyan-500/30 animate-pulse'
                           : isDeparted
-                            ? 'bg-emerald-500/20 text-emerald-400'
+                            ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30'
                             : isLast
-                              ? 'bg-amber-500/20 text-amber-400'
-                              : 'bg-base-800 text-base-content/60'
+                              ? 'bg-amber-500/15 text-amber-400 border border-amber-500/30'
+                              : 'bg-slate-800 text-slate-400 border border-slate-700'
                       }`}
                     >
                       {isCurrent ? (
@@ -154,39 +197,46 @@ export const RouteTimeline = ({
                     </div>
 
                     <div className="truncate">
-                      <div className="font-bold text-white text-sm truncate flex items-center gap-2">
-                        <span>
+                      <div className="font-bold text-white text-sm truncate flex items-center gap-2 font-heading">
+                        <span className="truncate">
                           {station.stationName || `Station #${idx + 1}`}
                         </span>
                         {isCurrent && (
-                          <span className="badge badge-xs badge-primary font-mono text-[9px] px-1 py-0.5">
+                          <span className="px-1.5 py-0.5 rounded bg-cyan-500 text-slate-950 font-mono text-[9px] font-black tracking-wider shrink-0">
                             LIVE
                           </span>
                         )}
                       </div>
-                      <div className="text-xs font-mono text-base-content/60">
-                        {station.stationCode}
+                      <div className="text-xs font-mono text-slate-400 flex items-center gap-2 mt-0.5">
+                        <span className="text-cyan-400 font-semibold">
+                          {station.stationCode}
+                        </span>
+                        {station.platform && (
+                          <span className="text-[10px] text-slate-500">
+                            PF #{station.platform}
+                          </span>
+                        )}
                       </div>
                     </div>
                   </div>
 
                   {/* Scheduled Times */}
                   <div className="w-1/4 text-center">
-                    <div className="text-[11px] uppercase tracking-wider text-base-content/50">
+                    <div className="text-[10px] uppercase font-bold tracking-wider text-slate-500">
                       Scheduled
                     </div>
-                    <div className="text-xs font-mono font-medium text-base-content/90 mt-0.5">
+                    <div className="text-xs font-mono font-medium text-slate-300 mt-1">
                       Arr: {formatTime(station.scheduledArrival)} | Dep:{' '}
                       {formatTime(station.scheduledDeparture)}
                     </div>
                   </div>
 
-                  {/* Expected Times */}
+                  {/* Expected / Actual Times */}
                   <div className="w-1/4 text-center">
-                    <div className="text-[11px] uppercase tracking-wider text-base-content/50">
+                    <div className="text-[10px] uppercase font-bold tracking-wider text-slate-500">
                       Expected / Actual
                     </div>
-                    <div className="text-xs font-mono font-semibold text-white mt-0.5">
+                    <div className="text-xs font-mono font-bold text-white mt-1">
                       Arr:{' '}
                       {formatTime(
                         station.expectedArrival || station.scheduledArrival
@@ -198,15 +248,15 @@ export const RouteTimeline = ({
                     </div>
                   </div>
 
-                  {/* Status Badge */}
+                  {/* Status Tag */}
                   <div className="w-1/6 text-right">
                     <span
-                      className={`badge badge-sm font-mono text-[11px] font-medium tracking-wide ${
+                      className={`inline-block px-2.5 py-1 rounded-xl font-mono text-[10px] font-bold tracking-wider uppercase border shadow-sm ${
                         isCurrent
-                          ? 'badge-primary'
+                          ? 'bg-cyan-500/10 text-cyan-300 border-cyan-500/40'
                           : isDeparted
-                            ? 'badge-success badge-outline'
-                            : 'badge-neutral'
+                            ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30'
+                            : 'bg-slate-800/80 text-slate-400 border-slate-700'
                       }`}
                     >
                       {station.status ||
