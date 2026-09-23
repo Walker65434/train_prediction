@@ -25,9 +25,8 @@ export const startWatch = async (req, res) => {
       status: STATUS.ACTIVE,
     });
 
-    if (activeWatchesCount === 1) {
-      await publishStart(trainId);
-    }
+    // Always publish start; the ML backend handles idempotency (ignores duplicates)
+    await publishStart(trainId);
 
     return res.status(201).json({
       watchId: watchSession.watchId,
