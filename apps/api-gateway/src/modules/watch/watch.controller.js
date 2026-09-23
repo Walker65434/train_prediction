@@ -1,6 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import Watch from './watch.model.js';
 import { publishStart } from '../../queues/start.producer.js';
+import { STATUS } from '@repo/constants/watch';
 
 // NOTE: Watch Start Handler
 export const startWatch = async (req, res) => {
@@ -16,12 +17,12 @@ export const startWatch = async (req, res) => {
     const watchSession = await Watch.create({
       watchId,
       trainId,
-      status: 'ACTIVE',
+      status: STATUS.ACTIVE,
     });
 
     const activeWatchesCount = await Watch.countDocuments({
       trainId,
-      status: 'ACTIVE',
+      status: STATUS.ACTIVE,
     });
 
     if (activeWatchesCount === 1) {

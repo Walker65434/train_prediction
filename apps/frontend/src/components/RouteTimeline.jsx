@@ -9,6 +9,7 @@ import {
   faRoute,
   faBuildingColumns,
 } from '@fortawesome/free-solid-svg-icons';
+import { STATION_STATUS } from '@repo/constants/result';
 
 export const RouteTimeline = ({
   route = [],
@@ -157,9 +158,9 @@ export const RouteTimeline = ({
               const isFirst = idx === 0;
               const isLast = idx === route.length - 1;
               const isCurrent =
-                station.status === 'CURRENT' ||
+                station.status === STATION_STATUS.CURRENT ||
                 station.stationCode === currStation?.stationCode;
-              const isDeparted = station.status === 'DEPARTED';
+              const isDeparted = station.status === STATION_STATUS.DEPARTED;
 
               return (
                 <div
@@ -261,10 +262,10 @@ export const RouteTimeline = ({
                     >
                       {station.status ||
                         (isCurrent
-                          ? 'CURRENT'
+                          ? STATION_STATUS.CURRENT
                           : isDeparted
-                            ? 'DEPARTED'
-                            : 'UPCOMING')}
+                            ? STATION_STATUS.DEPARTED
+                            : STATION_STATUS.UPCOMING)}
                     </span>
                   </div>
                 </div>

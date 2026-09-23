@@ -11,6 +11,7 @@ import {
   faSignal,
 } from '@fortawesome/free-solid-svg-icons';
 import toast from 'react-hot-toast';
+import { TRAIN_STATUS } from '@repo/constants/result';
 
 export const TrainHeaderCard = ({ trainData, lastUpdated }) => {
   if (!trainData) return null;
@@ -20,7 +21,7 @@ export const TrainHeaderCard = ({ trainData, lastUpdated }) => {
     trainName = `Train #${trainId}`,
     source,
     destination,
-    status = 'RUNNING',
+    status = TRAIN_STATUS.RUNNING,
   } = trainData;
 
   const handleShare = () => {
@@ -81,12 +82,18 @@ export const TrainHeaderCard = ({ trainData, lastUpdated }) => {
                 LIVE ETA STREAM
               </span>
               <span
-                className={`inline-flex items-center text-xs font-semibold px-3 py-1 rounded-xl border shadow-sm ${
-                  isRunning
-                    ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30'
-                    : isDelayed
-                      ? 'bg-amber-500/10 text-amber-400 border-amber-500/30'
-                      : 'bg-slate-800 text-slate-300 border-slate-700'
+                className={`badge text-xs font-semibold px-2.5 py-1 ${
+                  status === TRAIN_STATUS.RUNNING
+                    ? 'badge-success text-success-content'
+                    : status === TRAIN_STATUS.DELAYED
+                      ? 'badge-warning text-warning-content'
+                      : status === TRAIN_STATUS.SCHEDULED
+                        ? 'badge-info text-info-content'
+                        : status === TRAIN_STATUS.ARRIVED
+                          ? 'badge-primary text-primary-content'
+                          : status === TRAIN_STATUS.CANCELLED
+                            ? 'badge-error text-error-content'
+                            : 'badge-neutral'
                 }`}
               >
                 <span className="relative flex h-2 w-2 mr-2">
