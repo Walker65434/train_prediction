@@ -195,14 +195,14 @@ export const TrackPage = () => {
       {isLoading ? (
         <TrainSkeleton />
       ) : errorMessage ? (
-        <div className="mx-auto max-w-xl rounded-[32px] border border-[#f1c7bb] bg-[rgba(255,255,255,0.82)] p-8 text-center shadow-[0_20px_55px_rgba(57,46,38,0.06)]">
-          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-[#fff0eb] text-xl text-[#f05d3c]">
+        <div className="mx-auto max-w-xl rail-panel p-8 text-center">
+          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-white/60 text-xl text-red-500 border border-white/80">
             <FontAwesomeIcon icon={faTriangleExclamation} />
           </div>
-          <h2 className="mt-4 font-heading text-2xl font-black tracking-[-0.06em] text-[#1d1b1a]">
+          <h2 className="mt-4 font-heading text-2xl font-black tracking-[-0.06em] text-slate-900">
             Tracking session error
           </h2>
-          <p className="mt-3 text-sm text-[#5a5552]">{errorMessage}</p>
+          <p className="mt-3 text-sm text-slate-600">{errorMessage}</p>
           <div className="mt-6 flex items-center justify-center gap-3">
             <Link to="/" className="rail-btn secondary">
               <FontAwesomeIcon icon={faArrowLeft} />
@@ -221,10 +221,10 @@ export const TrackPage = () => {
           <div className="rail-panel flex flex-col items-start justify-between gap-3 px-4 py-4 sm:flex-row sm:items-center">
             <div className="flex items-center gap-3">
               <span className="relative flex h-3 w-3">
-                <span className={`absolute inline-flex h-full w-full rounded-full opacity-75 ${isLiveConnected ? 'bg-[#2d9a6f]' : 'bg-[#d08b2a]'} animate-ping`} />
-                <span className={`relative inline-flex h-3 w-3 rounded-full ${isLiveConnected ? 'bg-[#2d9a6f]' : 'bg-[#d08b2a]'}`} />
+                <span className={`absolute inline-flex h-full w-full rounded-full opacity-75 ${isLiveConnected ? 'bg-emerald-500' : 'bg-amber-500'} animate-ping`} />
+                <span className={`relative inline-flex h-3 w-3 rounded-full ${isLiveConnected ? 'bg-emerald-500' : 'bg-amber-500'}`} />
               </span>
-              <span className="text-sm text-[#4f4a47]">
+              <span className="text-sm text-slate-700">
                 {isLiveConnected
                   ? 'Persistent WebSocket stream active and receiving live ML updates.'
                   : 'Re-establishing live WebSocket connection...'}

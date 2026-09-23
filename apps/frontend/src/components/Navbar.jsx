@@ -41,50 +41,6 @@ export const Navbar = () => {
             </span>
           </div>
         </Link>
-
-        <nav className="hidden items-center gap-1 rounded-full bg-[#f7f2eb] px-2 py-1 md:flex">
-          {navItems.map((item) => (
-            <Link
-              key={item.label}
-              to={item.href}
-              className={`rounded-full px-3 py-2 text-sm font-medium transition-colors ${
-                location.pathname === '/' && item.label === 'Explore'
-                  ? 'bg-white text-[#1d1b1a] shadow-sm'
-                  : 'text-[#5e5a57] hover:bg-white hover:text-[#1d1b1a]'
-              }`}
-            >
-              {item.label}
-            </Link>
-          ))}
-        </nav>
-
-        <div className="flex items-center gap-2">
-          {isTrackPage && currentTrainId && (
-            <div className="hidden items-center gap-2 rounded-full border border-[#e7ded3] bg-[#fffaf5] px-3 py-2 text-xs font-medium text-[#1d1b1a] sm:flex">
-              <span className="relative flex h-2.5 w-2.5">
-                <span
-                  className={`absolute inline-flex h-full w-full rounded-full opacity-75 ${
-                    isLiveConnected ? 'bg-[#2d9a6f]' : 'bg-[#d08b2a]'
-                  } animate-ping`}
-                />
-                <span
-                  className={`relative inline-flex h-2.5 w-2.5 rounded-full ${
-                    isLiveConnected ? 'bg-[#2d9a6f]' : 'bg-[#d08b2a]'
-                  }`}
-                />
-              </span>
-              <span>{isLiveConnected ? 'Live' : 'Connecting'} • #{currentTrainId}</span>
-            </div>
-          )}
-
-          <button className="flex h-10 w-10 items-center justify-center rounded-full border border-[#e7ded3] bg-white text-[#1d1b1a] transition-all hover:-translate-y-0.5 hover:shadow-md">
-            <FontAwesomeIcon icon={faMagnifyingGlass} className="text-sm" />
-          </button>
-
-          <button className="flex h-10 w-10 items-center justify-center rounded-full border border-[#e7ded3] bg-[#1d1b1a] text-white shadow-[0_12px_20px_rgba(29,27,26,0.12)] transition-all hover:-translate-y-0.5">
-            <FontAwesomeIcon icon={faUser} className="text-sm" />
-          </button>
-        </div>
       </div>
     </header>
   );
