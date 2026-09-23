@@ -10,7 +10,7 @@ import {
   faHistory,
   faArrowRight,
   faTrash,
-  faSparkles,
+  faWandMagicSparkles,
   faSignal,
 } from '@fortawesome/free-solid-svg-icons';
 import toast from 'react-hot-toast';
@@ -18,10 +18,30 @@ import { useTrainStore } from '../store/useTrainStore';
 import TicketUploader from '../components/TicketUploader';
 
 const POPULAR_TRAINS = [
-  { id: '12951', name: 'Mumbai Rajdhani Express', route: 'MMCT → NDLS', type: 'Superfast Rajdhani' },
-  { id: '19217', name: 'Saurashtra Janta Express', route: 'BDTS → VRL', type: 'Express' },
-  { id: '12002', name: 'Bhopal Shatabdi Express', route: 'NDLS → RKMP', type: 'Shatabdi' },
-  { id: '22691', name: 'Bengaluru Rajdhani Express', route: 'SBC → NZM', type: 'Rajdhani' },
+  {
+    id: '12951',
+    name: 'Mumbai Rajdhani Express',
+    route: 'MMCT → NDLS',
+    type: 'Superfast Rajdhani',
+  },
+  {
+    id: '19217',
+    name: 'Saurashtra Janta Express',
+    route: 'BDTS → VRL',
+    type: 'Express',
+  },
+  {
+    id: '12002',
+    name: 'Bhopal Shatabdi Express',
+    route: 'NDLS → RKMP',
+    type: 'Shatabdi',
+  },
+  {
+    id: '22691',
+    name: 'Bengaluru Rajdhani Express',
+    route: 'SBC → NZM',
+    type: 'Rajdhani',
+  },
 ];
 
 export const HomePage = () => {
@@ -39,9 +59,12 @@ export const HomePage = () => {
     const rawId = (idToSearch !== undefined ? idToSearch : trainInput).trim();
 
     if (!rawId) {
-      toast.error('Please enter a 5-digit train number or upload a ticket photo', {
-        icon: '🚆',
-      });
+      toast.error(
+        'Please enter a 5-digit train number or upload a ticket photo',
+        {
+          icon: '🚆',
+        }
+      );
       return;
     }
 
@@ -77,7 +100,10 @@ export const HomePage = () => {
         {/* Hero Banner */}
         <div className="text-center space-y-4 max-w-3xl mx-auto mb-10 sm:mb-14">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs font-semibold tracking-wide shadow-sm backdrop-blur-md">
-            <FontAwesomeIcon icon={faBrain} className="text-cyan-400 animate-pulse" />
+            <FontAwesomeIcon
+              icon={faBrain}
+              className="text-cyan-400 animate-pulse"
+            />
             <span>AI-Driven Delay Prediction & WebSocket Engine</span>
           </div>
 
@@ -89,7 +115,9 @@ export const HomePage = () => {
           </h1>
 
           <p className="text-sm sm:text-base text-slate-400 max-w-2xl mx-auto leading-relaxed">
-            Instant Socket.IO stream, machine learning ETA calculations, and client-side ticket OCR scanner. Enter your 5-digit train number or upload a ticket.
+            Instant Socket.IO stream, machine learning ETA calculations, and
+            client-side ticket OCR scanner. Enter your 5-digit train number or
+            upload a ticket.
           </p>
         </div>
 
@@ -167,7 +195,10 @@ export const HomePage = () => {
                 disabled={!trainInput}
                 className="w-full py-4 rounded-2xl bg-gradient-to-r from-cyan-500 via-indigo-600 to-purple-600 hover:from-cyan-400 hover:to-purple-500 text-white font-heading font-bold text-base shadow-xl shadow-indigo-500/25 transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2 group"
               >
-                <FontAwesomeIcon icon={faMagnifyingGlass} className="group-hover:scale-110 transition-transform" />
+                <FontAwesomeIcon
+                  icon={faMagnifyingGlass}
+                  className="group-hover:scale-110 transition-transform"
+                />
                 <span>Track Live Train Status</span>
               </button>
             </form>
@@ -198,7 +229,10 @@ export const HomePage = () => {
           {/* Quick Suggestions / Sample Trains */}
           <div className="pt-4 border-t border-slate-800/80">
             <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3 flex items-center gap-2">
-              <FontAwesomeIcon icon={faSparkles} className="text-cyan-400 text-[10px]" />
+              <FontAwesomeIcon
+                icon={faWandMagicSparkles}
+                className="text-cyan-400 text-[10px]"
+              />
               <span>Popular Trains</span>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
@@ -241,7 +275,10 @@ export const HomePage = () => {
             <div className="pt-4 border-t border-slate-800/80">
               <div className="flex items-center justify-between mb-3">
                 <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-2">
-                  <FontAwesomeIcon icon={faHistory} className="text-indigo-400 text-xs" />
+                  <FontAwesomeIcon
+                    icon={faHistory}
+                    className="text-indigo-400 text-xs"
+                  />
                   <span>Recent Searches</span>
                 </div>
                 <button
@@ -286,7 +323,8 @@ export const HomePage = () => {
               Real-Time Socket.IO
             </h4>
             <p className="text-xs text-slate-400 leading-relaxed">
-              Persistent live connection feeds delay & station updates instantly without repetitive HTTP polling.
+              Persistent live connection feeds delay & station updates instantly
+              without repetitive HTTP polling.
             </p>
           </div>
 
@@ -298,7 +336,8 @@ export const HomePage = () => {
               ML-Powered Predictions
             </h4>
             <p className="text-xs text-slate-400 leading-relaxed">
-              FastAPI machine learning pipelines predict arrival delays using real-time factors and history.
+              FastAPI machine learning pipelines predict arrival delays using
+              real-time factors and history.
             </p>
           </div>
 
@@ -306,9 +345,12 @@ export const HomePage = () => {
             <div className="w-12 h-12 rounded-2xl bg-purple-500/10 text-purple-400 border border-purple-500/20 flex items-center justify-center mx-auto sm:mx-0 shadow-inner">
               <FontAwesomeIcon icon={faTicket} className="text-lg" />
             </div>
-            <h4 className="font-heading font-bold text-white text-base">Instant Ticket OCR</h4>
+            <h4 className="font-heading font-bold text-white text-base">
+              Instant Ticket OCR
+            </h4>
             <p className="text-xs text-slate-400 leading-relaxed">
-              Client-side Tesseract.js scans ticket photos directly in your browser without uploading private data.
+              Client-side Tesseract.js scans ticket photos directly in your
+              browser without uploading private data.
             </p>
           </div>
         </div>
@@ -322,4 +364,3 @@ export const HomePage = () => {
 };
 
 export default HomePage;
-

@@ -184,7 +184,10 @@ export const TicketUploader = ({ onSelectTrainNumber }) => {
             <div className="flex-1 w-full min-w-0">
               <div className="flex items-center justify-between mb-1.5">
                 <div className="flex items-center gap-2 truncate">
-                  <FontAwesomeIcon icon={faTicket} className="text-indigo-400 text-xs" />
+                  <FontAwesomeIcon
+                    icon={faTicket}
+                    className="text-indigo-400 text-xs"
+                  />
                   <span className="text-xs font-mono text-slate-400 truncate max-w-[180px]">
                     {file.name}
                   </span>
@@ -205,7 +208,10 @@ export const TicketUploader = ({ onSelectTrainNumber }) => {
                 <div className="space-y-2 my-2.5">
                   <div className="flex justify-between text-xs text-slate-300">
                     <span className="flex items-center gap-1.5 font-medium">
-                      <FontAwesomeIcon icon={faWandMagicSparkles} className="text-cyan-400 text-xs" />
+                      <FontAwesomeIcon
+                        icon={faWandMagicSparkles}
+                        className="text-cyan-400 text-xs"
+                      />
                       {statusMessage}
                     </span>
                     <span className="font-mono font-bold text-cyan-400">
@@ -253,7 +259,9 @@ export const TicketUploader = ({ onSelectTrainNumber }) => {
                     {/* Multiple Candidates if available */}
                     {candidates.length > 1 && (
                       <div className="text-xs text-slate-400 flex items-center gap-2 flex-wrap pt-1">
-                        <span className="text-[11px] font-medium text-slate-500">Other candidate numbers:</span>
+                        <span className="text-[11px] font-medium text-slate-500">
+                          Other candidate numbers:
+                        </span>
                         {candidates
                           .filter((c) => c !== extractedNumber)
                           .map((num) => (
@@ -291,4 +299,3 @@ export const TicketUploader = ({ onSelectTrainNumber }) => {
 };
 
 export default TicketUploader;
-

@@ -77,4 +77,3 @@ export const TrainSkeleton = () => {
 };
 
 export default TrainSkeleton;
-

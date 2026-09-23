@@ -1,8 +1,9 @@
 {
   "info": {
-    "_postman_id": "c1f21151-c006-47b2-843c-6bfdfb6de3d4",
-    "name": "Train ETA System - API Gateway",
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    "_postman_id": "4b800986-6abd-4298-bc11-6308126a3d0b",
+    "name": "API Gateway",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "40664998"
   },
   "item": [
     {
@@ -32,7 +33,12 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\n    \"trainId\": \"12951\"\n}"
+          "raw": "{\n    \"trainId\": \"{{trainId}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
         },
         "url": {
           "raw": "http://localhost:3000/watch",
@@ -50,11 +56,11 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "http://localhost:3000/result/12951",
+          "raw": "http://localhost:3000/result/{{trainId}}",
           "protocol": "http",
           "host": ["localhost"],
           "port": "3000",
-          "path": ["result", "12951"]
+          "path": ["result", "{{trainId}}"]
         }
       },
       "response": []

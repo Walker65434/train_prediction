@@ -9,7 +9,6 @@ import {
   faCircleCheck,
   faTriangleExclamation,
   faBolt,
-  faShieldCheck,
 } from '@fortawesome/free-solid-svg-icons';
 
 export const LiveMetricsGrid = ({ trainData }) => {
@@ -52,8 +51,7 @@ export const LiveMetricsGrid = ({ trainData }) => {
 
   // Derive max track speed dynamically without static hardcoding
   const calculatedMaxSpeed =
-    rawMaxSpeed ||
-    (speed > 130 ? Math.ceil(speed * 1.15) : 130);
+    rawMaxSpeed || (speed > 130 ? Math.ceil(speed * 1.15) : 130);
 
   // Derive confidence percentage dynamically
   const confidencePct = prediction?.confidence
@@ -90,7 +88,9 @@ export const LiveMetricsGrid = ({ trainData }) => {
         </div>
 
         <div className="space-y-1">
-          <div className="text-[11px] font-medium text-slate-400">Current Halt:</div>
+          <div className="text-[11px] font-medium text-slate-400">
+            Current Halt:
+          </div>
           <div className="text-lg font-bold text-white flex items-center gap-2 truncate font-heading">
             <span className="truncate">
               {currStation?.stationName || currStation?.name || 'In Transit'}
@@ -255,4 +255,3 @@ export const LiveMetricsGrid = ({ trainData }) => {
 };
 
 export default LiveMetricsGrid;
-

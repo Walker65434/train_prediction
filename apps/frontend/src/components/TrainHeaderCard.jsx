@@ -104,7 +104,10 @@ export const TrainHeaderCard = ({ trainData, lastUpdated }) => {
             {/* Source to Destination Route Visualizer */}
             <div className="flex items-center gap-3 text-sm text-slate-300 flex-wrap pt-1">
               <div className="flex items-center gap-2 font-semibold text-white bg-slate-950/70 border border-slate-800 px-3 py-1.5 rounded-xl shadow-inner">
-                <FontAwesomeIcon icon={faTrain} className="text-cyan-400 text-xs" />
+                <FontAwesomeIcon
+                  icon={faTrain}
+                  className="text-cyan-400 text-xs"
+                />
                 <span>{source?.stationName || 'Source Station'}</span>
                 {source?.stationCode && (
                   <span className="text-xs font-mono text-cyan-400 bg-cyan-500/10 px-1.5 py-0.5 rounded border border-cyan-500/20">
@@ -115,7 +118,10 @@ export const TrainHeaderCard = ({ trainData, lastUpdated }) => {
 
               <div className="flex items-center gap-1.5 text-cyan-400">
                 <span className="h-[2px] w-6 bg-gradient-to-r from-cyan-500 to-indigo-500 rounded" />
-                <FontAwesomeIcon icon={faArrowRight} className="text-xs animate-pulse" />
+                <FontAwesomeIcon
+                  icon={faArrowRight}
+                  className="text-xs animate-pulse"
+                />
               </div>
 
               <div className="flex items-center gap-2 font-semibold text-white bg-slate-950/70 border border-slate-800 px-3 py-1.5 rounded-xl shadow-inner">
@@ -150,4 +156,3 @@ export const TrainHeaderCard = ({ trainData, lastUpdated }) => {
 };
 
 export default TrainHeaderCard;
-

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrain, faBolt, faCircle, faSparkles } from '@fortawesome/free-solid-svg-icons';
+import { faTrain, faBolt, faCircle } from '@fortawesome/free-solid-svg-icons';
 import { useTrainStore } from '../store/useTrainStore';
 
 export const Navbar = () => {
@@ -17,7 +17,10 @@ export const Navbar = () => {
         <Link to="/" className="flex items-center gap-3 group">
           <div className="relative">
             <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 via-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/25 group-hover:scale-105 transition-all duration-300">
-              <FontAwesomeIcon icon={faTrain} className="text-white text-lg group-hover:rotate-6 transition-transform duration-300" />
+              <FontAwesomeIcon
+                icon={faTrain}
+                className="text-white text-lg group-hover:rotate-6 transition-transform duration-300"
+              />
             </div>
             <div className="absolute -bottom-1 -right-1 w-3.5 h-3.5 rounded-full bg-emerald-500 border-2 border-slate-950 flex items-center justify-center">
               <span className="w-1.5 h-1.5 rounded-full bg-white animate-ping" />
@@ -27,7 +30,10 @@ export const Navbar = () => {
           <div>
             <div className="flex items-center gap-2">
               <span className="font-heading font-black text-xl tracking-tight text-white group-hover:text-cyan-400 transition-colors">
-                Rail<span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-indigo-400 to-purple-400">Predict</span>
+                Rail
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-indigo-400 to-purple-400">
+                  Predict
+                </span>
               </span>
               <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-[10px] font-mono font-semibold text-indigo-400">
                 <FontAwesomeIcon icon={faBolt} className="text-[8px]" />
@@ -60,7 +66,9 @@ export const Navbar = () => {
                 {isLiveConnected ? (
                   <span className="text-emerald-400 flex items-center gap-1">
                     Socket Live
-                    <span className="text-[10px] text-slate-500">#{currentTrainId}</span>
+                    <span className="text-[10px] text-slate-500">
+                      #{currentTrainId}
+                    </span>
                   </span>
                 ) : (
                   <span className="text-amber-400">Connecting...</span>
@@ -82,4 +90,3 @@ export const Navbar = () => {
 };
 
 export default Navbar;
-

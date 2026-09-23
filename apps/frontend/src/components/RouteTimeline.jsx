@@ -34,8 +34,7 @@ export const RouteTimeline = ({
   if (hasRoute) {
     const currentIdx = route.findIndex(
       (s) =>
-        s.status === 'CURRENT' ||
-        s.stationCode === currStation?.stationCode
+        s.status === 'CURRENT' || s.stationCode === currStation?.stationCode
     );
     if (currentIdx >= 0) {
       routeProgressPct = Math.round(((currentIdx + 1) / route.length) * 100);
@@ -56,7 +55,8 @@ export const RouteTimeline = ({
             <span>Station Timetable & Route Progression</span>
           </h3>
           <p className="text-xs text-slate-400 mt-1">
-            Real-time schedule comparison with predicted arrival & departure timestamps
+            Real-time schedule comparison with predicted arrival & departure
+            timestamps
           </p>
         </div>
 
@@ -84,11 +84,13 @@ export const RouteTimeline = ({
         <div className="space-y-2">
           <div className="flex justify-between text-xs text-slate-400 font-medium">
             <span>Overall Route Progression</span>
-            <span className="font-mono text-cyan-400 font-bold">{routeProgressPct}% Completed</span>
+            <span className="font-mono text-cyan-400 font-bold">
+              {routeProgressPct}% Completed
+            </span>
           </div>
           <div className="w-full bg-slate-950 rounded-full h-2 overflow-hidden border border-slate-800">
             <div
-              className="bg-gradient-to-r from-emerald-500 via-cyan-500 to-indigo-500 h-full rounded-full transition-all duration-500"
+              className="bg-linear-to-r from-emerald-500 via-cyan-500 to-indigo-500 h-full rounded-full transition-all duration-500"
               style={{ width: `${routeProgressPct}%` }}
             />
           </div>
@@ -113,12 +115,15 @@ export const RouteTimeline = ({
             </div>
 
             {/* Current */}
-            <div className="p-5 rounded-2xl bg-gradient-to-br from-cyan-500/10 to-indigo-500/10 border border-cyan-500/30 w-full sm:w-1/3 text-center space-y-1 relative shadow-lg shadow-cyan-500/5">
+            <div className="p-5 rounded-2xl bg-linear-to-br from-cyan-500/10 to-indigo-500/10 border border-cyan-500/30 w-full sm:w-1/3 text-center space-y-1 relative shadow-lg shadow-cyan-500/5">
               <span className="px-2.5 py-0.5 rounded-md bg-cyan-500/20 text-[10px] font-mono font-bold text-cyan-300 uppercase">
                 Current Position
               </span>
               <div className="font-bold text-white text-base font-heading flex items-center justify-center gap-1.5">
-                <FontAwesomeIcon icon={faTrain} className="text-cyan-400 text-xs animate-pulse" />
+                <FontAwesomeIcon
+                  icon={faTrain}
+                  className="text-cyan-400 text-xs animate-pulse"
+                />
                 <span>{currStation?.stationName || 'In Transit'}</span>
               </div>
               <div className="font-mono text-xs text-cyan-300 font-bold">
@@ -140,13 +145,14 @@ export const RouteTimeline = ({
             </div>
           </div>
           <p className="text-xs text-slate-500">
-            Intermediate halt timetable stream will update automatically as train advances.
+            Intermediate halt timetable stream will update automatically as
+            train advances.
           </p>
         </div>
       ) : (
         // Detailed station list
         <div className="relative overflow-x-auto">
-          <div className="min-w-[650px] space-y-2.5 pt-2">
+          <div className="min-w-162.5 space-y-2.5 pt-2">
             {route.map((station, idx) => {
               const isFirst = idx === 0;
               const isLast = idx === route.length - 1;
@@ -160,7 +166,7 @@ export const RouteTimeline = ({
                   key={station.stationCode || idx}
                   className={`flex items-center justify-between p-4 rounded-2xl border transition-all duration-200 ${
                     isCurrent
-                      ? 'bg-gradient-to-r from-cyan-500/10 via-indigo-500/10 to-slate-900 border-cyan-500/50 shadow-lg shadow-cyan-500/10'
+                      ? 'bg-linear-to-r from-cyan-500/10 via-indigo-500/10 to-slate-900 border-cyan-500/50 shadow-lg shadow-cyan-500/10'
                       : isDeparted
                         ? 'bg-slate-950/40 border-slate-800/60 opacity-80'
                         : 'bg-slate-950/70 border-slate-800 hover:border-slate-700'
@@ -169,9 +175,9 @@ export const RouteTimeline = ({
                   {/* Station Identity */}
                   <div className="flex items-center gap-3.5 w-2/5 min-w-0">
                     <div
-                      className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 text-sm font-bold shadow-sm ${
+                      className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 text-sm font-bold shadow-sm ${
                         isCurrent
-                          ? 'bg-gradient-to-tr from-cyan-500 to-indigo-600 text-white shadow-cyan-500/30 animate-pulse'
+                          ? 'bg-linear-to-tr from-cyan-500 to-indigo-600 text-white shadow-cyan-500/30 animate-pulse'
                           : isDeparted
                             ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30'
                             : isLast
@@ -196,13 +202,15 @@ export const RouteTimeline = ({
                           {station.stationName || `Station #${idx + 1}`}
                         </span>
                         {isCurrent && (
-                          <span className="px-1.5 py-0.5 rounded bg-cyan-500 text-slate-950 font-mono text-[9px] font-black tracking-wider flex-shrink-0">
+                          <span className="px-1.5 py-0.5 rounded bg-cyan-500 text-slate-950 font-mono text-[9px] font-black tracking-wider shrink-0">
                             LIVE
                           </span>
                         )}
                       </div>
                       <div className="text-xs font-mono text-slate-400 flex items-center gap-2 mt-0.5">
-                        <span className="text-cyan-400 font-semibold">{station.stationCode}</span>
+                        <span className="text-cyan-400 font-semibold">
+                          {station.stationCode}
+                        </span>
                         {station.platform && (
                           <span className="text-[10px] text-slate-500">
                             PF #{station.platform}
@@ -270,4 +278,3 @@ export const RouteTimeline = ({
 };
 
 export default RouteTimeline;
-
