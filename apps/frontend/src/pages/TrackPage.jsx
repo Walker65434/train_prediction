@@ -22,6 +22,7 @@ import {
   startHeartbeat,
   stopHeartbeat,
 } from '../lib/socket';
+import { STATUS, STOP_REASON } from '@repo/constants/watch';
 
 import TrainSkeleton from '../components/TrainSkeleton';
 import TrainHeaderCard from '../components/TrainHeaderCard';
@@ -48,6 +49,7 @@ export const TrackPage = () => {
     setError,
     clearWatch,
     addRecentSearch,
+    setWatchStatus,
   } = useTrainStore();
 
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -115,7 +117,10 @@ export const TrackPage = () => {
         };
 
         const onDisconnect = () => {
-          if (isMounted) setLiveConnected(false);
+          if (isMounted) {
+            setLiveConnected(false);
+            setWatchStatus(STATUS.STOPPED);
+          }
         };
 
         const onEtaUpdate = (payload) => {

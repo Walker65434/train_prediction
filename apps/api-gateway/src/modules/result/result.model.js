@@ -15,7 +15,7 @@ const stationSchema = new mongoose.Schema(
 
     expectedDeparture: { type: Date },
 
-    status: { type: String, enum: STATION_STATUS },
+    status: { type: String, enum: Object.values(STATION_STATUS) },
   },
   { _id: false }
 );
@@ -40,7 +40,7 @@ const resultSchema = new mongoose.Schema(
 
     nextStation: { stationCode: String, stationName: String },
 
-    status: { type: String, enum: TRAIN_STATUS },
+    status: { type: String, enum: Object.values(TRAIN_STATUS) },
 
     delayMin: { type: Number, default: 0 },
 

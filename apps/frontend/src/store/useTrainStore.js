@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { STATUS } from '@repo/constants/watch';
 
 const getInitialRecentSearches = () => {
   try {
@@ -27,7 +28,7 @@ export const useTrainStore = create((set, get) => ({
     set({
       watchId,
       currentTrainId: String(trainId).trim(),
-      watchStatus: 'ACTIVE',
+      watchStatus: STATUS.ACTIVE,
       errorMessage: null,
     }),
 
@@ -76,6 +77,8 @@ export const useTrainStore = create((set, get) => ({
   setLoading: (isLoading) => set({ isLoading }),
 
   setLiveConnected: (isLiveConnected) => set({ isLiveConnected }),
+
+  setWatchStatus: (watchStatus) => set({ watchStatus }),
 
   setHeartbeatAck: (lastHeartbeatAck) => set({ lastHeartbeatAck }),
 

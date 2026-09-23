@@ -19,8 +19,8 @@ const watchSchema = new mongoose.Schema(
 
     status: {
       type: String,
-      enum: STATUS,
-      default: 'ACTIVE',
+      enum: Object.values(STATUS),
+      default: STATUS.ACTIVE,
       index: true,
     },
 
@@ -31,7 +31,7 @@ const watchSchema = new mongoose.Schema(
 
     stopReason: {
       type: String,
-      enum: STOP_REASON,
+      enum: Object.values(STOP_REASON),
       default: null,
     },
   },

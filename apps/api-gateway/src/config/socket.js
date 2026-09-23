@@ -1,6 +1,7 @@
 import { Server } from 'socket.io';
 import Watch from '../modules/watch/watch.model.js';
 import { publishStop } from '../queues/stop.producer.js';
+import { STATUS, STOP_REASON } from '@repo/constants/watch';
 
 let io;
 
@@ -15,6 +16,9 @@ export const initializeSocket = (server) => {
   });
 
   console.log('🔌 Socket.IO Server Started');
+
+  // Start background monitor for dead sessions
+  startHeartbeatMonitor();
 
   io.on('connection', (socket) => {
     console.log(`🔗 Client Connected: ${socket.id}`);
@@ -75,12 +79,12 @@ export const initializeSocket = (server) => {
       try {
         await Watch.findOneAndUpdate(
           { watchId },
-          { status: 'STOPPED', stopReason: reason }
+          { status: STATUS.STOPPED, stopReason: reason }
         );
 
         const activeWatchesCount = await Watch.countDocuments({
           trainId,
-          status: 'ACTIVE',
+          status: STATUS.ACTIVE,
         });
 
         if (activeWatchesCount === 0) {
@@ -103,7 +107,7 @@ export const initializeSocket = (server) => {
 
       if (trainId) {
         socket.leave(`train:${trainId}`);
-        await cleanupWatch(watchId, trainId, 'USER_LEFT');
+        await cleanupWatch(watchId, trainId, STOP_REASON.USER_LEFT);
       }
 
       socket.emit('watch-stopped', {
@@ -129,7 +133,7 @@ export const initializeSocket = (server) => {
         await cleanupWatch(
           socket.watchId,
           socket.trainId,
-          'WEBSOCKET_DISCONNECTED'
+          STOP_REASON.WEBSOCKET_DISCONNECTED
         );
       }
     });
@@ -143,6 +147,46 @@ export const initializeSocket = (server) => {
   });
 
   return io;
+};
+
+/*
+ * Background monitor to clean up dead sessions
+ * Runs every 2 minutes, expires watches with no heartbeat for 5+ mins
+ */
+const startHeartbeatMonitor = () => {
+  setInterval(async () => {
+    try {
+      const expirationTime = new Date(Date.now() - 5 * 60 * 1000); // 5 mins ago
+
+      const expiredWatches = await Watch.find({
+        status: STATUS.ACTIVE,
+        lastHeartbeat: { $lt: expirationTime },
+      });
+
+      if (expiredWatches.length > 0) {
+        console.log(`🧹 Cleaning up ${expiredWatches.length} expired watch sessions...`);
+
+        for (const watch of expiredWatches) {
+          await Watch.findOneAndUpdate(
+            { watchId: watch.watchId },
+            { status: STATUS.EXPIRED, stopReason: STOP_REASON.HEARTBEAT_TIMEOUT }
+          );
+
+          // Check if this was the last active watcher for this train
+          const activeCount = await Watch.countDocuments({
+            trainId: watch.trainId,
+            status: STATUS.ACTIVE,
+          });
+
+          if (activeCount === 0) {
+            await publishStop(watch.trainId);
+          }
+        }
+      }
+    } catch (err) {
+      console.error('🚩 Error in heartbeat monitor:', err.message);
+    }
+  }, 2 * 60 * 1000);
 };
 
 /*
