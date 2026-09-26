@@ -10,12 +10,13 @@ from app.workers.publishers import publish_result
 active_trains = {}
 active_trains_lock = threading.Lock()
 
+
 # =====================================================
 # PREDICTION LOOP
 # =====================================================
 def prediction_loop(train_id: str, stop_event: threading.Event):
     print(f"[LOOP START] Starting prediction loop for train: {train_id}", flush=True)
-    
+
     # Run the loop until stop_event is set
     while not stop_event.is_set():
         try:
@@ -23,11 +24,14 @@ def prediction_loop(train_id: str, stop_event: threading.Event):
             result_payload = predict_eta(train_id)
             publish_result(result_payload)
         except Exception as e:
-            print(f"[LOOP ERROR] Error predicting/publishing for {train_id}: {e}", flush=True)
-        
+            print(
+                f"[LOOP ERROR] Error predicting/publishing for {train_id}: {e}",
+                flush=True,
+            )
+
         # Wait 60 seconds before next prediction (Rate limit: 1 req/min)
         stop_event.wait(60)
-        
+
     print(f"[LOOP END] Stopped prediction loop for train: {train_id}", flush=True)
 
 
@@ -47,9 +51,11 @@ def process_train_start(ch, method, properties, body):
             if train_id not in active_trains:
                 stop_event = threading.Event()
                 active_trains[train_id] = stop_event
-                
+
                 # Start background loop
-                t = threading.Thread(target=prediction_loop, args=(train_id, stop_event), daemon=True)
+                t = threading.Thread(
+                    target=prediction_loop, args=(train_id, stop_event), daemon=True
+                )
                 t.start()
             else:
                 print(f"Train {train_id} is already being tracked.", flush=True)
@@ -93,25 +99,25 @@ def start_consumer():
     try:
         connection, channel = get_channel()
         channel.basic_qos(prefetch_count=10)
-        
+
         # Declare queues
         channel.queue_declare(queue=START_QUEUE, durable=True)
         channel.queue_declare(queue=STOP_QUEUE, durable=True)
-        
+
         # Consume from START queue
         channel.basic_consume(
             queue=START_QUEUE,
             on_message_callback=process_train_start,
             auto_ack=False,
         )
-        
+
         # Consume from STOP queue
         channel.basic_consume(
             queue=STOP_QUEUE,
             on_message_callback=process_train_stop,
             auto_ack=False,
         )
-        
+
         print(f"Waiting for messages on {START_QUEUE} and {STOP_QUEUE}...", flush=True)
         channel.start_consuming()
 

@@ -77,9 +77,13 @@ export const LiveMetricsGrid = ({ trainData }) => {
           </div>
         </div>
         <div className="mt-4">
-          <div className="text-xs uppercase tracking-[0.18em] text-slate-500">Current halt</div>
+          <div className="text-xs uppercase tracking-[0.18em] text-slate-500">
+            Current halt
+          </div>
           <div className="mt-2 flex items-center gap-2 text-xl font-black tracking-[-0.06em] text-slate-900">
-            <span>{currStation?.stationName || currStation?.name || 'In Transit'}</span>
+            <span>
+              {currStation?.stationName || currStation?.name || 'In Transit'}
+            </span>
             {currStation?.stationCode ? (
               <span className="rounded-full bg-orange-500/10 px-2 py-1 text-[10px] font-bold uppercase tracking-[0.14em] text-orange-600">
                 {currStation.stationCode}
@@ -91,7 +95,10 @@ export const LiveMetricsGrid = ({ trainData }) => {
           <span>Upcoming halt</span>
           <span className="flex items-center gap-1 font-semibold text-slate-900">
             {nextStation?.stationName || nextStation?.name || 'Destination'}
-            <FontAwesomeIcon icon={faArrowRight} className="text-[10px] text-orange-500" />
+            <FontAwesomeIcon
+              icon={faArrowRight}
+              className="text-[10px] text-orange-500"
+            />
           </span>
         </div>
       </div>
@@ -100,7 +107,9 @@ export const LiveMetricsGrid = ({ trainData }) => {
         <div className="flex items-center justify-between">
           <span className="metric-label">Punctuality</span>
           <div className={`metric-icon ${isDelayed ? 'amber' : 'green'}`}>
-            <FontAwesomeIcon icon={isDelayed ? faTriangleExclamation : faCircleCheck} />
+            <FontAwesomeIcon
+              icon={isDelayed ? faTriangleExclamation : faCircleCheck}
+            />
           </div>
         </div>
         <div className="mt-4">
@@ -108,9 +117,19 @@ export const LiveMetricsGrid = ({ trainData }) => {
             {actualDelay <= 0 ? (
               <span className="text-emerald-500">On time</span>
             ) : (
-              <span className={isSeverelyDelayed ? 'text-red-500' : isDelayed ? 'text-amber-500' : 'text-emerald-500'}>
+              <span
+                className={
+                  isSeverelyDelayed
+                    ? 'text-red-500'
+                    : isDelayed
+                      ? 'text-amber-500'
+                      : 'text-emerald-500'
+                }
+              >
                 +{actualDelay}{' '}
-                <span className="text-sm font-medium text-slate-500">mins late</span>
+                <span className="text-sm font-medium text-slate-500">
+                  mins late
+                </span>
               </span>
             )}
           </div>
@@ -121,7 +140,13 @@ export const LiveMetricsGrid = ({ trainData }) => {
         <div className="mt-5 flex items-center justify-between border-t border-slate-200 pt-3 text-xs text-slate-500">
           <span>Performance</span>
           <span className="font-semibold text-slate-900">
-            {actualDelay <= 0 ? 'On schedule' : actualDelay <= 5 ? 'Minimal delay' : actualDelay <= 30 ? 'Moderate delay' : 'Severe delay'}
+            {actualDelay <= 0
+              ? 'On schedule'
+              : actualDelay <= 5
+                ? 'Minimal delay'
+                : actualDelay <= 30
+                  ? 'Moderate delay'
+                  : 'Severe delay'}
           </span>
         </div>
       </div>
@@ -135,7 +160,8 @@ export const LiveMetricsGrid = ({ trainData }) => {
         </div>
         <div className="mt-4">
           <div className="text-2xl font-black tracking-[-0.06em] text-slate-900">
-            {speed || 0} <span className="text-sm font-medium text-slate-500">km/h</span>
+            {speed || 0}{' '}
+            <span className="text-sm font-medium text-slate-500">km/h</span>
           </div>
           <div className="mt-2 text-xs uppercase tracking-[0.18em] text-slate-500">
             {speed > 0 ? 'Active movement' : 'Stationary at halt'}
@@ -143,7 +169,9 @@ export const LiveMetricsGrid = ({ trainData }) => {
         </div>
         <div className="mt-5 flex items-center justify-between border-t border-slate-200 pt-3 text-xs text-slate-500">
           <span>Max speed</span>
-          <span className="font-semibold text-slate-900">{calculatedMaxSpeed} km/h</span>
+          <span className="font-semibold text-slate-900">
+            {calculatedMaxSpeed} km/h
+          </span>
         </div>
       </div>
 
@@ -165,10 +193,15 @@ export const LiveMetricsGrid = ({ trainData }) => {
         <div className="mt-5">
           <div className="mb-2 flex items-center justify-between text-xs text-slate-500">
             <span>ML confidence</span>
-            <span className="font-semibold text-slate-900">{confidencePct}%</span>
+            <span className="font-semibold text-slate-900">
+              {confidencePct}%
+            </span>
           </div>
           <div className="h-2.5 w-full overflow-hidden rounded-full bg-slate-200 border border-slate-200">
-            <div className="h-full rounded-full bg-[linear-gradient(90deg,#ea580c_0%,#f97316_45%,#f59e0b_100%)]" style={{ width: `${confidencePct}%` }} />
+            <div
+              className="h-full rounded-full bg-[linear-gradient(90deg,#ea580c_0%,#f97316_45%,#f59e0b_100%)]"
+              style={{ width: `${confidencePct}%` }}
+            />
           </div>
         </div>
       </div>

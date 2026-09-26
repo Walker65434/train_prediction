@@ -153,38 +153,46 @@ export const initializeSocket = (server) => {
  * Runs every 2 minutes, expires watches with no heartbeat for 5+ mins
  */
 const startHeartbeatMonitor = () => {
-  setInterval(async () => {
-    try {
-      const expirationTime = new Date(Date.now() - 5 * 60 * 1000); // 5 mins ago
+  setInterval(
+    async () => {
+      try {
+        const expirationTime = new Date(Date.now() - 5 * 60 * 1000); // 5 mins ago
 
-      const expiredWatches = await Watch.find({
-        status: STATUS.ACTIVE,
-        lastHeartbeat: { $lt: expirationTime },
-      });
+        const expiredWatches = await Watch.find({
+          status: STATUS.ACTIVE,
+          lastHeartbeat: { $lt: expirationTime },
+        });
 
-      if (expiredWatches.length > 0) {
-        console.log(`🧹 Cleaning up ${expiredWatches.length} expired watch sessions...`);
-
-        for (const watch of expiredWatches) {
-          await Watch.findOneAndUpdate(
-            { watchId: watch.watchId },
-            { status: STATUS.EXPIRED, stopReason: STOP_REASON.HEARTBEAT_TIMEOUT }
+        if (expiredWatches.length > 0) {
+          console.log(
+            `🧹 Cleaning up ${expiredWatches.length} expired watch sessions...`
           );
 
-          // Check if this was the last active watcher for this train
-          const activeCount = await Watch.countDocuments({
-            trainId: watch.trainId,
-            status: STATUS.ACTIVE,
-          });
+          for (const watch of expiredWatches) {
+            await Watch.findOneAndUpdate(
+              { watchId: watch.watchId },
+              {
+                status: STATUS.EXPIRED,
+                stopReason: STOP_REASON.HEARTBEAT_TIMEOUT,
+              }
+            );
 
-          // Always publish stop to ensure ML service kills the loop
-          await publishStop(watch.trainId);
+            // Check if this was the last active watcher for this train
+            const activeCount = await Watch.countDocuments({
+              trainId: watch.trainId,
+              status: STATUS.ACTIVE,
+            });
+
+            // Always publish stop to ensure ML service kills the loop
+            await publishStop(watch.trainId);
+          }
         }
+      } catch (err) {
+        console.error('🚩 Error in heartbeat monitor:', err.message);
       }
-    } catch (err) {
-      console.error('🚩 Error in heartbeat monitor:', err.message);
-    }
-  }, 2 * 60 * 1000);
+    },
+    2 * 60 * 1000
+  );
 };
 
 /*

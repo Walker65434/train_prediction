@@ -60,7 +60,11 @@ export const TrainHeaderCard = ({ trainData, lastUpdated }) => {
             Search another train
           </Link>
 
-          <button type="button" onClick={handleShare} className="rail-btn secondary w-fit">
+          <button
+            type="button"
+            onClick={handleShare}
+            className="rail-btn secondary w-fit"
+          >
             <FontAwesomeIcon icon={faShareNodes} />
             Share link
           </button>
@@ -100,7 +104,10 @@ export const TrainHeaderCard = ({ trainData, lastUpdated }) => {
                 ) : null}
               </div>
 
-              <FontAwesomeIcon icon={faArrowRight} className="text-orange-600" />
+              <FontAwesomeIcon
+                icon={faArrowRight}
+                className="text-orange-600"
+              />
 
               <div className="flex items-center gap-2 rounded-full border border-slate-300 bg-white/60 px-3 py-2 font-semibold text-slate-900">
                 <span>{destination?.stationName || 'Destination Station'}</span>
@@ -118,8 +125,12 @@ export const TrainHeaderCard = ({ trainData, lastUpdated }) => {
               <FontAwesomeIcon icon={faClockRotateLeft} />
             </div>
             <div>
-              <div className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500">Last socket sync</div>
-              <div className="mt-1 font-mono text-sm font-bold text-slate-900">{formattedTime}</div>
+              <div className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500">
+                Last socket sync
+              </div>
+              <div className="mt-1 font-mono text-sm font-bold text-slate-900">
+                {formattedTime}
+              </div>
             </div>
           </div>
         </div>

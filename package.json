@@ -18,17 +18,17 @@
     "infra": "docker compose up",
     "infra:down": "docker compose down",
     "format": "pnpm run format:js && pnpm run format:py",
-    "format:js": "prettier --write \"**/*.{js,jsx,json,md,yml,yaml,css}\"",
+    "format:js": "prettier --write \"**/*.{js,jsx,json,md,yml,yaml,css,html}\"",
     "format:py": "turbo run format",
     "format:check": "pnpm run format:check:js && pnpm run format:check:py",
     "format:check:js": "prettier --check .",
     "format:check:py": "turbo run format:check"
   },
   "devDependencies": {
-    "prettier": "3.9.8",
-    "turbo": "^2.11.2"
+    "prettier": "3.9.9",
+    "turbo": "^2.11.4"
   },
-  "packageManager": "pnpm@12.5.1",
+  "packageManager": "pnpm@12.6.0",
   "engines": {
     "node": ">=24"
   }

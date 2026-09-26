@@ -14,13 +14,9 @@
         "url": {
           "raw": "http://localhost:3000/health",
           "protocol": "http",
-          "host": [
-            "localhost"
-          ],
+          "host": ["localhost"],
           "port": "3000",
-          "path": [
-            "health"
-          ]
+          "path": ["health"]
         }
       },
       "response": []
@@ -47,13 +43,9 @@
         "url": {
           "raw": "http://localhost:3000/watch",
           "protocol": "http",
-          "host": [
-            "localhost"
-          ],
+          "host": ["localhost"],
           "port": "3000",
-          "path": [
-            "watch"
-          ]
+          "path": ["watch"]
         }
       },
       "response": []
@@ -66,14 +58,9 @@
         "url": {
           "raw": "http://localhost:3000/result/{{trainId}}",
           "protocol": "http",
-          "host": [
-            "localhost"
-          ],
+          "host": ["localhost"],
           "port": "3000",
-          "path": [
-            "result",
-            "{{trainId}}"
-          ]
+          "path": ["result", "{{trainId}}"]
         }
       },
       "response": []

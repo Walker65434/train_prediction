@@ -8,11 +8,12 @@ from app.core.model_loader import model_loader
 # LIFESPAN
 # =====================================================
 
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # LOAD ML MODELS
     model_loader.load()
-    
+
     print("Starting RabbitMQ Consumer...", flush=True)
 
     # START RABBITMQ CONSUMER
@@ -25,6 +26,7 @@ async def lifespan(app: FastAPI):
 
     print("Shutting down application...", flush=True)
 
+
 # =====================================================
 # FASTAPI APP
 # =====================================================
@@ -34,6 +36,7 @@ app = FastAPI(title="Train Prediction ML Service", lifespan=lifespan)
 # =====================================================
 # ROOT
 # =====================================================
+
 
 @app.get("/health")
 async def root():

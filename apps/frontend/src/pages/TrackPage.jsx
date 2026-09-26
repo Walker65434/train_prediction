@@ -117,7 +117,8 @@ export const TrackPage = () => {
         };
 
         const onWatchStarted = () => {};
-        const onError = (err) => console.warn('[TrackPage] Socket warning:', err);
+        const onError = (err) =>
+          console.warn('[TrackPage] Socket warning:', err);
 
         socket.on('connect', onConnect);
         socket.on('disconnect', onDisconnect);
@@ -208,7 +209,10 @@ export const TrackPage = () => {
               <FontAwesomeIcon icon={faArrowLeft} />
               Return home
             </Link>
-            <button onClick={() => window.location.reload()} className="rail-btn primary">
+            <button
+              onClick={() => window.location.reload()}
+              className="rail-btn primary"
+            >
               <FontAwesomeIcon icon={faRotateRight} />
               Retry
             </button>
@@ -221,8 +225,12 @@ export const TrackPage = () => {
           <div className="rail-panel flex flex-col items-start justify-between gap-3 px-4 py-4 sm:flex-row sm:items-center">
             <div className="flex items-center gap-3">
               <span className="relative flex h-3 w-3">
-                <span className={`absolute inline-flex h-full w-full rounded-full opacity-75 ${isLiveConnected ? 'bg-emerald-500' : 'bg-amber-500'} animate-ping`} />
-                <span className={`relative inline-flex h-3 w-3 rounded-full ${isLiveConnected ? 'bg-emerald-500' : 'bg-amber-500'}`} />
+                <span
+                  className={`absolute inline-flex h-full w-full rounded-full opacity-75 ${isLiveConnected ? 'bg-emerald-500' : 'bg-amber-500'} animate-ping`}
+                />
+                <span
+                  className={`relative inline-flex h-3 w-3 rounded-full ${isLiveConnected ? 'bg-emerald-500' : 'bg-amber-500'}`}
+                />
               </span>
               <span className="text-sm text-slate-700">
                 {isLiveConnected
@@ -231,8 +239,16 @@ export const TrackPage = () => {
               </span>
             </div>
 
-            <button type="button" onClick={handleManualRefresh} disabled={isRefreshing} className="rail-btn secondary">
-              <FontAwesomeIcon icon={faRotateRight} className={isRefreshing ? 'animate-spin' : ''} />
+            <button
+              type="button"
+              onClick={handleManualRefresh}
+              disabled={isRefreshing}
+              className="rail-btn secondary"
+            >
+              <FontAwesomeIcon
+                icon={faRotateRight}
+                className={isRefreshing ? 'animate-spin' : ''}
+              />
               Refresh snapshot
             </button>
           </div>

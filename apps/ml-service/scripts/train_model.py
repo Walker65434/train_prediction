@@ -22,7 +22,7 @@ columns_to_remove = [
     "primary_delay_cause",
     "delay_minutes",
     "is_delayed",
-    "is_overloaded"
+    "is_overloaded",
 ]
 
 X = df.drop(columns=[col for col in columns_to_remove if col in df.columns])
@@ -35,13 +35,9 @@ preprocessor = ColumnTransformer(
         (
             "categorical",
             OneHotEncoder(handle_unknown="ignore", sparse_output=False),
-            categorical_features
+            categorical_features,
         ),
-        (
-            "numerical",
-            "passthrough",
-            numerical_features
-        )
+        ("numerical", "passthrough", numerical_features),
     ]
 )
 
@@ -59,7 +55,7 @@ xgb_model = XGBRegressor(
     objective="reg:squarederror",
     eval_metric="rmse",
     random_state=42,
-    n_jobs=-1
+    n_jobs=-1,
 )
 
 xgb_model.fit(X_encoded, y)
